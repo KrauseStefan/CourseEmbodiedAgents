@@ -18,7 +18,7 @@ public class PrjDataLogger {
 		conn = Bluetooth.waitForConnection(0, NXTConnection.PACKET);
 		dlog.startRealtimeLog(conn);
 
-		dlog.setColumns(new LogColumn[] { new LogColumn("sensor", LogColumn.DT_INTEGER, 2) });
+		dlog.setColumns(new LogColumn[] { new LogColumn("sensor", LogColumn.DT_LONG, 2) });
 
 		// code example below assumes gyro object has the illustrated methods
 		// gyro.setAccScale2G();
@@ -41,7 +41,7 @@ public class PrjDataLogger {
 
 	}
 
-	void log(int sensorVal) throws InterruptedException {
+	void log(long sensorVal) throws InterruptedException {
 		dlog.writeLog(sensorVal);
 		dlog.finishLine();
 	}

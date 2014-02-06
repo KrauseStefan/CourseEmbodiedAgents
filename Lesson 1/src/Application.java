@@ -15,7 +15,14 @@ import lejos.nxt.*;
 public class Application {
 
 	public static void main(String[] aArg) throws Exception {
+		LCD.drawString(String.valueOf(Runtime.getRuntime().freeMemory()), 0, 2);
+			
+		while (!Button.RIGHT.isDown()) {
+		}
+
 		PrjDataLogger logger = new PrjDataLogger();
+
+
 		String left = "Turn left ";
 		String right = "Turn right";
 
@@ -38,7 +45,7 @@ public class Application {
 			LCD.drawInt(light.readValue(), 3, 9, 0);
 		}
 		
-		LCD.drawString("Waiting for logger to connect", 0, 2);
+//		LCD.drawString("Waiting for logger to connect", 0, 2);
 		logger.connect();
 		
 		// Follow line until ESCAPE is pressed
@@ -64,8 +71,9 @@ public class Application {
 			sensorVal = light.readValue();
 			LCD.drawInt(sensorVal, 3, 9, 0);
 			
-			logger.log(sensorVal);
+			logger.log(Runtime.getRuntime().freeMemory());
 			
+//			LCD.drawString(String.valueOf(Runtime.getRuntime().freeMemory()), 0, 2);
 			Thread.sleep(50);
 		}
 
@@ -75,5 +83,11 @@ public class Application {
 		LCD.clear();
 		LCD.drawString("Program stopped", 0, 0);
 		Thread.sleep(1000);
+		
+		LCD.drawString(String.valueOf(Runtime.getRuntime().freeMemory()), 0, 2);
+		
+		while (!Button.RIGHT.isDown()) {
+		}
+
 	}
 }
