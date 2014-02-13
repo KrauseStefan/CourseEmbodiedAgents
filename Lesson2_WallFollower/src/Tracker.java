@@ -23,7 +23,7 @@ public class Tracker
          power, 
          minPower = 55;
 
-     final float Kp = 2f,
+     final float Kp = 2,
     		 	 Ki = 0,
     		 	 Kd = 80;
 
