@@ -1,4 +1,5 @@
 import lejos.nxt.*;
+
 /**
  * A simple sonar sensor test program.
  * 
@@ -15,16 +16,18 @@ import lejos.nxt.*;
 
 public class App {
 	public static void main(String[] args) throws Exception {
-		UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
-
-		LCD.drawString("Distance(cm) ", 0, 0);
-		while (!Button.ESCAPE.isDown()) {
-			LCD.drawInt(us.getDistance(), 3, 13, 0);
-
-			Thread.sleep(300);
-		}
-		LCD.clear();
-		LCD.drawString("Program stopped", 0, 0);
-		Thread.sleep(2000);
+		Tracker.mainTracker(args);
+		
+//		UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
+//
+//		LCD.drawString("Distance(cm) ", 0, 0);
+//		while (!Button.ESCAPE.isDown()) {
+//			LCD.drawInt(us.getDistance(), 3, 13, 0);
+//
+//			Thread.sleep(300);
+//		}
+//		LCD.clear();
+//		LCD.drawString("Program stopped", 0, 0);
+//		Thread.sleep(2000);
 	}
 }

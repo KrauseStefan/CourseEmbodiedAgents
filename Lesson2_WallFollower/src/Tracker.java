@@ -21,8 +21,18 @@ public class Tracker
      int distance,
          desiredDistance = 35, // cm
          power, 
-         minPower = 60;
-     float error, gain = 0.5f;
+         minPower = 55;
+
+     final float Kp = 2f,
+    		 	 Ki = 0,
+    		 	 Kd = 80;
+
+     
+     float error, 
+     	derivative,
+     	previous_error = 0, 
+     	integral = 0, 
+     	dt = 300;
 	  
      LCD.drawString("Distance: ", 0, 1);
      LCD.drawString("Power:    ", 0, 2);
@@ -34,7 +44,12 @@ public class Tracker
          if ( distance != noObject ) 
          {
              error = distance - desiredDistance;
-             power = (int)(gain * error);
+             integral = integral + error * dt;
+             derivative = (error - previous_error)/dt;
+             
+             power = (int)(Kp * error + Ki*integral + Kd*derivative);
+             previous_error = error;
+             
              if ( error > 0 )
              { 
                  power = Math.min(minPower + power,100);
@@ -45,21 +60,21 @@ public class Tracker
              {
                  power = Math.min(minPower + Math.abs(power),100);
                  Car.backward(power, power);
-		         LCD.drawString("Backward", 0, 3);
-		    	 
+		         LCD.drawString("Backward", 0, 3);		    	 
              }
+             
              LCD.drawInt(distance,4,10,1);
              LCD.drawInt(power, 4,10,2);
 		 }
          else
              Car.forward(100, 100);
 		 
-         Thread.sleep(300);
+         Thread.sleep((int)dt);
      }
 	 
      Car.stop();
-     LCD.clear();
-     LCD.drawString("Program stopped", 0, 0);
-     Thread.sleep(2000);
+//     LCD.clear();
+//     LCD.drawString("Program stopped", 0, 0);
+//     Thread.sleep(2000);
    }
 }
