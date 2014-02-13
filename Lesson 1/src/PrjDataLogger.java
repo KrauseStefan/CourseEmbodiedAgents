@@ -18,27 +18,7 @@ public class PrjDataLogger {
 		conn = Bluetooth.waitForConnection(0, NXTConnection.PACKET);
 		dlog.startRealtimeLog(conn);
 
-		dlog.setColumns(new LogColumn[] { new LogColumn("sensor", LogColumn.DT_LONG, 2) });
-
-		// code example below assumes gyro object has the illustrated methods
-		// gyro.setAccScale2G();
-		// float gx, gy, pitch;
-		//
-		// while (Button.ESCAPE.isUp()) {
-		// gx = gyro.getLastAccel(0);
-		// gy = gyro.getLastAccel(1);
-		// pitch = gyro.getLastPitch();
-		// dlog.writeLog(gx);
-		// dlog.writeLog(gy);
-		// dlog.writeLog(pitch);
-		// dlog.writeLog(gyro.getAngularVelocity());
-		// dlog.writeLog(gyro.getHeading());
-		// dlog.finishLine();
-		// Delay.msDelay(50);
-		// gyro.readAllData();
-		// }
-		// dlog.stopLogging();
-
+		dlog.setColumns(new LogColumn[] { new LogColumn("sensor", LogColumn.DT_LONG) });
 	}
 
 	void log(long sensorVal) throws InterruptedException {
