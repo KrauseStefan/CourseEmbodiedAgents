@@ -16,7 +16,7 @@ import lejos.nxt.*;
 
 public class App {
 	public static void main(String[] args) throws Exception {
-		Tracker.mainTracker(args);
+		WallTracker.mainTracker(args);
 		
 //		UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
 //

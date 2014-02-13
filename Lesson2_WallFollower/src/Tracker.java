@@ -25,7 +25,7 @@ public class Tracker
 
      final float Kp = 2,
     		 	 Ki = 0,
-    		 	 Kd = 80;
+    		 	 Kd = 0;
 
      
      float error, 
