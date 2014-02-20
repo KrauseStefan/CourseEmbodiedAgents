@@ -2,13 +2,15 @@ import lejos.nxt.*;
 
 public class App {
 
-	private static PrjDataLogger prjLogger = new PrjDataLogger();
 	
 	public static void main(String[] args) throws Exception {
 		//SoundCtrCar.mainSoundCtrCar(args);
 		LemonPartyFinder.mainParty(args);
+		//SoundCtrCar_ClapDetector.mainSoundCtrCar(args);
 		
-//		SoundSensor s = new SoundSensor(SensorPort.S2);
+//		PrjDataLogger prjLogger = new PrjDataLogger();
+		
+//		SoundSensor s = new SoundSensor(SensorPort.S1);
 //		int soundLevel;
 //		
 //		prjLogger.connect();
