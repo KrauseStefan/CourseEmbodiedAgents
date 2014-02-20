@@ -5,8 +5,8 @@ public class App {
 	private static PrjDataLogger prjLogger = new PrjDataLogger();
 	
 	public static void main(String[] args) throws Exception {
-		SoundCtrCar.mainSoundCtrCar(args);
-		
+		//SoundCtrCar.mainSoundCtrCar(args);
+		LemonPartyFinder.mainParty(args);
 		
 //		SoundSensor s = new SoundSensor(SensorPort.S2);
 //		int soundLevel;
