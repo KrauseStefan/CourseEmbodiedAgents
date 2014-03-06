@@ -39,10 +39,12 @@ public class Segway
     float int_error;
 	
     LightSensor ls;
+    ColorSensor cs; 
 	
     public Segway() 
     {
         ls = new LightSensor(SensorPort.S2, true);
+        cs = new ColorSensor(SensorPort.S3);
         LCD.drawString(waiting,0,0);
 
         btc = Bluetooth.waitForConnection();
@@ -74,13 +76,33 @@ public class Segway
 	        catch (Exception e){}
         }
     }
+    
+    public void getBalancePosColor() 
+    {
+        // Wait for user to balance and press orange button
+        while (!Button.ENTER.isDown())
+        {
+	        // NXTway must be balanced.
+	        offset = cs.getNormalizedLightValue();
+	        LCD.clear();
+	        LCD.drawInt(offset, 2, 4);
+	        LCD.refresh();
+	        try {
+	        	dos.write(offset);
+	        	dos.write(KP);
+	        	dos.write(KI);
+	        	dos.write(KD);
+	        }
+	        catch (Exception e){}
+        }
+    }
 	
     public void pidControl() 
     {
         while (!Button.ESCAPE.isDown()) 
         {
             int normVal = ls.readNormalizedValue();
-            
+            //int normVal = cs.getNormalizedLightValue();
             try 
             {
             	offset = dis.readInt();
