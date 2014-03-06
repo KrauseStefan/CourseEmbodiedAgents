@@ -97,9 +97,9 @@ public class PCcarController extends JFrame implements ActionListener {
 		p3.add(I_Field);
 		p3.add(new JLabel("D"));
 		p3.add(D_Field);
-		P_Field.setText("1");
-		I_Field.setText("1");
-		D_Field.setText("1");
+		P_Field.setText("NA");
+		I_Field.setText("NA");
+		D_Field.setText("NA");
 
 		
 		// holds go button
@@ -156,6 +156,12 @@ public class PCcarController extends JFrame implements ActionListener {
 				
 				int offset = dis.readInt();
 				offsetField.setText("  " + offset);
+				int p = dis.readInt();
+				P_Field.setText("  " + p);
+				int i = dis.readInt();
+				I_Field.setText("  " + i);
+				int d = dis.readInt();
+				D_Field.setText("  " + d);
 				
 			} catch (Exception ex) {
 				System.out.println("Unable to connect");
