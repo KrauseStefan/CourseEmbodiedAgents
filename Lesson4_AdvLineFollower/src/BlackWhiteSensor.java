@@ -17,7 +17,7 @@ public class BlackWhiteSensor {
    private LightSensor ls; 
    private int blackLightValue;
    private int whiteLightValue;
-   private int blackWhiteThreshold;
+   public int blackWhiteThreshold;
 
    public BlackWhiteSensor(SensorPort p)
    {
