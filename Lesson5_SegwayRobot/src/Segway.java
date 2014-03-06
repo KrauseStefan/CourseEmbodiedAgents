@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import lejos.nxt.*;
 import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
+import lejos.robotics.BaseMotor;
 
 /**
  * A controller for a self-balancing Lego robot with a light sensor on port 2.
@@ -27,23 +28,23 @@ public class Segway implements Runnable {
 	private DataOutputStream dos;
 
 	// PID constants
-	int KP = 28;
-	int KI = 4;
-	int KD = 33;
-	int SCALE = 18;
+	float KP = 18;
+	float KI = 3;
+	float KD = 9;
+	float SCALE = 18;
 
 	// Global vars:
-	int offset;
-	int prev_error;
+	float offset;
+	float prev_error;
 	float int_error;
 
 	private Thread t1;
-	
+
 	LightSensor ls;
 
 	public Segway() {
 		ls = new LightSensor(SensorPort.S2, true);
-		
+
 		LCD.drawString(started, 0, 0);
 	}
 
@@ -56,23 +57,23 @@ public class Segway implements Runnable {
 
 	public void sendInitData() {
 		btc = Bluetooth.waitForConnection();
-
+		getBalancePos();
 		LCD.clear();
 		LCD.drawString(connected, 0, 0);
 
 		dis = btc.openDataInputStream();
 		dos = btc.openDataOutputStream();
 		LCD.clear();
-		LCD.drawInt(offset, 2, 4);
+		LCD.drawInt((int) offset, 2, 4);
 		try {
 			Thread.sleep(2000);
-			dos.writeInt(offset);
+			dos.writeFloat(offset);
 			dos.flush();
-			dos.writeInt(KP);
+			dos.writeFloat(KP);
 			dos.flush();
-			dos.writeInt(KI);
+			dos.writeFloat(KI);
 			dos.flush();
-			dos.writeInt(KD);
+			dos.writeFloat(KD);
 			dos.flush();
 		} catch (Exception e) {
 			LCD.clear();
@@ -84,14 +85,14 @@ public class Segway implements Runnable {
 	public void readPidData() {
 		try {
 			LCD.drawString("Thread started.", 0, 0);
-			offset = dis.readInt();
-			LCD.drawInt(offset, 0, 1);
-			KP = dis.readInt();
-			LCD.drawInt(KP, 0, 2);
-			KI = dis.readInt();
-			LCD.drawInt(KI, 0, 3);
-			KD = dis.readInt();
-			LCD.drawInt(KD, 0, 4);
+			offset = dis.readFloat();
+			LCD.drawInt((int) offset, 0, 1);
+			KP = dis.readFloat();
+			LCD.drawInt((int) KP, 0, 2);
+			KI = dis.readFloat();
+			LCD.drawInt((int) KI, 0, 3);
+			KD = dis.readFloat();
+			LCD.drawInt((int) KD, 0, 4);
 		} catch (Exception e) {
 			LCD.clear();
 			LCD.drawString("Thread ERROR.", 0, 0);
@@ -103,34 +104,42 @@ public class Segway implements Runnable {
 		LCD.clear();
 		t1.start();
 		
+		float preNormVal = ls.readNormalizedValue();
 		while (!Button.ESCAPE.isDown()) {
-			int normVal = ls.readNormalizedValue();
-
+			float normVal = preNormVal;
+			preNormVal = ls.readNormalizedValue();
+			
+			normVal = (normVal + preNormVal)/2;
+			
 			// Proportional Error:
-			int error = normVal - offset;
+			float error = normVal - offset;
 			// Adjust far and near light readings:
 			if (error < 0)
-				error = (int) (error * 1.8F);
+				error = (error * 1.8F);
 
 			// Integral Error:
 			int_error = ((int_error + error) * 2) / 3;
 
 			// Derivative Error:
-			int deriv_error = error - prev_error;
+			float deriv_error = error - prev_error;
 			prev_error = error;
 
-			int pid_val = (int) (KP * error + KI * int_error + KD * deriv_error)
-					/ SCALE;
+			float pid_val = (KP * error + KI * int_error + KD * deriv_error) / SCALE;
 
-			if (pid_val > 100)
-				pid_val = 100;
-			if (pid_val < -100)
-				pid_val = -100;
+			float maxVal = 20;
+			if (pid_val > maxVal)
+				pid_val = maxVal;
+			if (pid_val < -maxVal)
+				pid_val = -maxVal;
 
 			// Power derived from PID value:
-			int power = Math.abs(pid_val);
-			power = 55 + (power * 45) / 100; // NORMALIZE POWER
+			int power = (int) Math.abs(pid_val);
+			power = 55 + power;
 
+//			if(pid_val > -2 && pid_val < 2 ){
+//				MotorPort.B.controlMotor(power, BasicMotorPort.STOP);
+//				MotorPort.C.controlMotor(0, BasicMotorPort.STOP);
+//			}else 
 			if (pid_val > 0) {
 				MotorPort.B.controlMotor(power, BasicMotorPort.FORWARD);
 				MotorPort.C.controlMotor(power, BasicMotorPort.FORWARD);
@@ -165,7 +174,7 @@ public class Segway implements Runnable {
 
 	public static void main(String[] args) {
 		Segway sej = new Segway();
-		sej.getBalancePos();
+//		sej.getBalancePos();
 		sej.sendInitData();
 		sej.pidControl();
 		sej.shutDown();

@@ -8,6 +8,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+
+import org.jfree.chart.plot.ThermometerPlot;
+
 import lejos.pc.comm.*;
 
 import java.io.*;
@@ -29,23 +32,23 @@ public class PCcarController extends JFrame implements ActionListener {
 	private String name = "failbot";
 	private String address = "0016530702bc";
 
-//	private TextField powerField = new TextField(10);
-//	private TextField durField = new TextField(10);
-//	private TextField countField = new TextField(10);
+	// private TextField powerField = new TextField(10);
+	// private TextField durField = new TextField(10);
+	// private TextField countField = new TextField(10);
 
 	private TextField P_Field = new TextField(10);
 	private TextField I_Field = new TextField(10);
 	private TextField D_Field = new TextField(10);
 	private TextField offsetField = new TextField(10);
-	
+
 	private NXTComm nxtComm;
 	private NXTInfo nxtInfo;
-	
+
 	private InputStream is;
-	private DataInputStream dis; //recive
+	private DataInputStream dis; // recive
 
 	private OutputStream os;
-	private DataOutputStream dos; //send
+	private DataOutputStream dos; // send
 
 	private JButton connectButton = new JButton("Connect");
 	private JButton goButton = new JButton("Go");
@@ -81,13 +84,13 @@ public class PCcarController extends JFrame implements ActionListener {
 		connectButton.addActionListener(this);
 
 		// holds labels and text fields
-//		JPanel p3 = new JPanel();
-//		p3.add(new JLabel("Power:"));
-//		p3.add(powerField);
-//		powerField.setText("100");
-//		p3.add(new JLabel("Dur:"));
-//		p3.add(durField);
-//		durField.setText("1000");
+		// JPanel p3 = new JPanel();
+		// p3.add(new JLabel("Power:"));
+		// p3.add(powerField);
+		// powerField.setText("100");
+		// p3.add(new JLabel("Dur:"));
+		// p3.add(durField);
+		// durField.setText("1000");
 
 		// holds labels and text field
 		JPanel p3 = new JPanel();
@@ -101,7 +104,6 @@ public class PCcarController extends JFrame implements ActionListener {
 		I_Field.setText("NA");
 		D_Field.setText("NA");
 
-		
 		// holds go button
 		JPanel p4 = new JPanel();
 		p4.add(goButton);
@@ -113,12 +115,11 @@ public class PCcarController extends JFrame implements ActionListener {
 		p5.add(offsetField);
 		offsetField.setText("NA");
 
-		
-//		// holds labels and text field
-//		JPanel p5 = new JPanel();
-//		p5.add(new JLabel("Count:"));
-//		p5.add(countField);
-//		countField.setText("0");
+		// // holds labels and text field
+		// JPanel p5 = new JPanel();
+		// p5.add(new JLabel("Count:"));
+		// p5.add(countField);
+		// countField.setText("0");
 
 		// North area of the frame
 		JPanel panel = new JPanel();
@@ -128,7 +129,7 @@ public class PCcarController extends JFrame implements ActionListener {
 		panel.add(p3);
 		panel.add(p4);
 		panel.add(p5);
-//		panel.add(p6);
+		// panel.add(p6);
 		add(panel, BorderLayout.NORTH);
 
 	}
@@ -141,7 +142,7 @@ public class PCcarController extends JFrame implements ActionListener {
 		if (e.getSource() == connectButton) {
 			String name = nameField.getText();
 			String address = addressField.getText();
-			
+
 			nxtInfo.name = name;
 			nxtInfo.deviceAddress = address;
 
@@ -152,55 +153,64 @@ public class PCcarController extends JFrame implements ActionListener {
 				dis = new DataInputStream(is);
 				dos = new DataOutputStream(os);
 
-				System.out.println("Connected!");			
-				
-				int offset = dis.readInt();
-				offsetField.setText("  " + offset);
-				int p = dis.readInt();
-				P_Field.setText("  " + p);
-				int i = dis.readInt();
-				I_Field.setText("  " + i);
-				int d = dis.readInt();
-				D_Field.setText("  " + d);
-				
+				System.out.println("Connected!");
+
+				Thread.sleep(200);
+				dos.flush();
+
+				float offset = dis.readFloat();
+				offsetField.setText("" + offset);
+				float p = dis.readFloat();
+				P_Field.setText("" + p);
+				float i = dis.readFloat();
+				I_Field.setText("" + i);
+				float d = dis.readFloat();
+				D_Field.setText("" + d);
+
 			} catch (Exception ex) {
-				System.out.println("Unable to connect");
+				System.out.println("Unable to connect, or possible resive values");
 			}
 
 		}
 
 		if (e.getSource() == goButton) {
 			try {
-				int offset = new Integer(offsetField.getText()).intValue();
-				int p = new Integer(P_Field.getText()).intValue();
-				int i = new Integer(I_Field.getText()).intValue();
-				int d = new Integer(D_Field.getText()).intValue();
+				String offsetString = offsetField.getText().trim();
+				String pString = P_Field.getText().trim();
+				String iString = I_Field.getText().trim();
+				String dString = D_Field.getText().trim();
 				
-				dos.writeInt(offset);
+				float o = new Float(offsetString).floatValue();
+				float p = new Float(pString).floatValue();
+				float i = new Float(iString).floatValue();
+				float d = new Float(dString).floatValue();
+
+				dos.writeFloat(o);
 				dos.flush();
-				dos.writeInt(p);
+				dos.writeFloat(p);
 				dos.flush();
-				dos.writeInt(i);
+				dos.writeFloat(i);
 				dos.flush();
-				dos.writeInt(d);
+				dos.writeFloat(d);
 				dos.flush();
-			
+
 				System.out.println("PID and offset parameters sent.");
-				
-//				String freqString = powerField.getText();
-//				int freq = new Integer(freqString).intValue();
-//				dos.writeInt(freq);
-//				dos.flush();
-//
-//				String durString = durField.getText();
-//				int dur = new Integer(durString).intValue();
-//				dos.writeInt(dur);
-//				dos.flush();
-//				int count = dis.readInt();
-//				countField.setText("  " + count);
+
+				// String freqString = powerField.getText();
+				// int freq = new Integer(freqString).intValue();
+				// dos.writeInt(freq);
+				// dos.flush();
+				//
+				// String durString = durField.getText();
+				// int dur = new Integer(durString).intValue();
+				// dos.writeInt(dur);
+				// dos.flush();
+				// int count = dis.readInt();
+				// countField.setText("  " + count);
 			} catch (Exception ex) {
+				System.out.println("Error sending data.");
 			}
-			
+
 		}
 	}
 
