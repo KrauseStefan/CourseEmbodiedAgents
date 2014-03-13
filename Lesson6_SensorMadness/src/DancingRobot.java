@@ -5,7 +5,7 @@ import lejos.nxt.MotorPort;
 import lejos.nxt.SensorPort;
 import lejos.nxt.SoundSensor;
 
-public class DansingRobot {
+public class DancingRobot {
 	static SoundSensor sound = new SoundSensor(SensorPort.S1);
 
 	static final int threshold = 30;
