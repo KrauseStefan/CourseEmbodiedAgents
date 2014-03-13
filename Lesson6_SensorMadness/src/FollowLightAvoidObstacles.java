@@ -51,7 +51,7 @@ public class FollowLightAvoidObstacles  {
 	}
 
 	public static int limit(int value, int limit) {
-		return value > limit ? 0 : value;
+		return value > limit ? 300 : value;
 	}
 
 	public static boolean avoidingObsticles() {
