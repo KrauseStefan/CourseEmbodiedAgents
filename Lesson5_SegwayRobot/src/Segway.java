@@ -40,10 +40,12 @@ public class Segway implements Runnable {
 
 	private Thread t1;
 
-	LightSensor ls;
+//	LightSensor ls;
+	ColorSensor ls;
 
 	public Segway() {
-		ls = new LightSensor(SensorPort.S2, true);
+//		ls = new LightSensor(SensorPort.S2, true);
+		ls = new ColorSensor(SensorPort.S3);
 
 		LCD.drawString(started, 0, 0);
 	}
@@ -52,7 +54,8 @@ public class Segway implements Runnable {
 		LCD.clear();
 		LCD.drawString(waiting, 0, 0);
 
-		offset = ls.readNormalizedValue();
+//		offset = ls.readNormalizedValue();
+		offset = ls.getNormalizedLightValue();
 	}
 
 	public void sendInitData() {
@@ -104,10 +107,12 @@ public class Segway implements Runnable {
 		LCD.clear();
 		t1.start();
 		
-		float preNormVal = ls.readNormalizedValue();
+//		float preNormVal = ls.readNormalizedValue();
+		float preNormVal = ls.getNormalizedLightValue();
 		while (!Button.ESCAPE.isDown()) {
 			float normVal = preNormVal;
-			preNormVal = ls.readNormalizedValue();
+//			preNormVal = ls.readNormalizedValue();
+			preNormVal = ls.getNormalizedLightValue();
 			
 			normVal = (normVal + preNormVal)/2;
 			
