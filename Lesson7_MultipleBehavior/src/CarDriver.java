@@ -43,8 +43,7 @@ public class CarDriver {
 			performBackspin(command);
 		} else {
 			leftMotor.controlMotor(command.leftPower, ccToMc(command.command));
-			rightMotor
-					.controlMotor(command.rightPower, ccToMc(command.command));
+			rightMotor.controlMotor(command.rightPower, ccToMc(command.command));
 		}
 	}
 
@@ -54,6 +53,7 @@ public class CarDriver {
 		carCommand.leftPower = command.leftPower;
 		carCommand.rightPower = command.rightPower;
 		perform(carCommand); // go backwards
+		
 		Delay.msDelay(command.spinDelay);
 		
 		performSpin(command); // spin the vehicle
@@ -62,11 +62,11 @@ public class CarDriver {
 	}
 
 	private void performSpin(CarCommand command) {
-		if (command.direction == "right") {
+		if (command.direction.equals("left")) {
 			leftMotor.controlMotor(command.leftPower, forward);
 			rightMotor.controlMotor(command.rightPower, backward);
 			Delay.msDelay(command.spinDelay);
-		} else if (command.direction == "left") {
+		} else if (command.direction.equals("right")) {
 			leftMotor.controlMotor(command.leftPower, backward);
 			rightMotor.controlMotor(command.rightPower, forward);
 			Delay.msDelay(command.spinDelay);
