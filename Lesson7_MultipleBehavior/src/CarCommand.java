@@ -2,9 +2,9 @@
 public class CarCommand 
 {
 	public enum Command {
-	    FORWARD, BACKWARD, STOP 
+	    FORWARD, BACKWARD, STOP, SPIN
 	}
 	public volatile Command command;
-	public volatile int leftPower, rightPower;
+	public volatile int leftPower, rightPower, spinDelay;
 
 }

@@ -1,3 +1,5 @@
+import lejos.util.Delay;
+
 
 /**
  * A locomotion module with methods to drive
@@ -57,5 +59,14 @@ public class SharedCar implements Car
     		result = carCommand;
     	}
     	return ( result);
+    }
+    
+    public void spin(int ms, int power)
+    {
+    	carCommand.command = CarCommand.Command.SPIN;
+    	carCommand.leftPower = power;
+    	carCommand.rightPower = power;
+    	carCommand.spinDelay = ms;
+    	commandReady = true;
     }
 }

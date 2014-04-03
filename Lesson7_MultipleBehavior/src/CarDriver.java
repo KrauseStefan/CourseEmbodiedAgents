@@ -1,5 +1,5 @@
-
 import lejos.nxt.*;
+
 /*
  * A car driver module with a method to drive
  * a differential car with two independent motors. The left motor 
@@ -12,35 +12,45 @@ import lejos.nxt.*;
  * @author  Ole Caprani
  * @version 21.3.14
  */
-public class CarDriver
-{
+public class CarDriver {
 	// Commands for the motors
-	final int forward  = 1,
-	          backward = 2,
-	          stop     = 3;
-	
-    private MotorPort leftMotor = MotorPort.C;
-    private MotorPort rightMotor= MotorPort.B;
-	
-	public CarDriver()
-	{
+	final int forward = 1, backward = 2, stop = 3;
+
+	private MotorPort leftMotor = MotorPort.C;
+	private MotorPort rightMotor = MotorPort.B;
+
+	public CarDriver() {
 	}
-	
-	private int ccToMc(CarCommand.Command carCommand)
-	{
-		switch ( carCommand )
-		{
-		case FORWARD:  return forward;
-		case BACKWARD: return backward;
-		case STOP:     return stop;
+
+	private int ccToMc(CarCommand.Command carCommand) {
+		switch (carCommand) {
+		case FORWARD:
+			return forward;
+		case BACKWARD:
+			return backward;
+		case STOP:
+			return stop;
 		}
 		return -1;
 	}
 
-	public void perform(CarCommand command)
-	{
-		leftMotor.controlMotor(command.leftPower, ccToMc(command.command));
-		rightMotor.controlMotor(command.rightPower,ccToMc(command.command));
-    }
-}
+	public void perform(CarCommand command) {
 
+		if (command.command == CarCommand.Command.SPIN) {
+			performSpin(command);
+		} else {
+			leftMotor.controlMotor(command.leftPower, ccToMc(command.command));
+			rightMotor.controlMotor(command.rightPower, ccToMc(command.command));
+		}
+	}
+
+	private void performSpin(CarCommand command) {
+		if (command.spinDelay > 0) {
+			leftMotor.controlMotor(command.leftPower, forward);
+			rightMotor.controlMotor(command.rightPower, backward);
+		} else if (command.spinDelay < 0) {
+			leftMotor.controlMotor(command.leftPower, backward);
+			rightMotor.controlMotor(command.rightPower, forward);
+		}
+	}
+}
