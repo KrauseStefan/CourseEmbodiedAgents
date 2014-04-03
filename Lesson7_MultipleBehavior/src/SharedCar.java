@@ -46,6 +46,19 @@ public class SharedCar implements Car
     	commandReady = true;
     }
     
+    public void turnLightSensor(int power, String direction)
+    {
+    	if(direction.equals("LEFT")) {
+    		carCommand.command = CarCommand.Command.TURN_LIGHT_SENSOR_LEFT;
+    		carCommand.lightPower = power;
+    		commandReady = true;
+    	} else if (direction.equals("RIGHT")) {
+    		carCommand.command = CarCommand.Command.TURN_LIGHT_SENSOR_RIGHT;
+    		carCommand.lightPower = power;
+    		commandReady = true;
+    	}
+    }
+    
     public void noCommand()
     {
     	commandReady = false;

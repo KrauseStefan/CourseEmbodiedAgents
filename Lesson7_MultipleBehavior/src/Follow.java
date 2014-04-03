@@ -11,6 +11,8 @@ import lejos.util.Delay;
 class Follow extends Thread
 {
     private SharedCar car = new SharedCar();
+    private final String LEFT = "LEFT";
+    private final String RIGHT = "RIGHT";
 
 	private int power = 70, ms = 500;
 	LightSensor light = new LightSensor(SensorPort.S4);
@@ -41,19 +43,25 @@ class Follow extends Thread
 	    	while ( frontLight > lightThreshold )
 	    	{
 	    		// Get the light to the left
-	    		car.forward(0, power);
+	    		car.turnLightSensor(power, LEFT);
+	    		//car.forward(0, power);
 	    		Delay.msDelay(ms);
 	    		leftLight = light.getLightValue();
 	    		
 	    		// Get the light to the right
-	    		car.backward(0, power);
+	    		car.turnLightSensor(power, RIGHT);
 	    		Delay.msDelay(ms);
-    		    car.forward(power, 0);
+	    		car.turnLightSensor(power, RIGHT);
 	    		Delay.msDelay(ms);
 	    		rightLight = light.getLightValue();
 	    		
+	    		//car.backward(0, power);
+	    		//Delay.msDelay(ms);
+    		    //car.forward(power, 0);
+	    		//Delay.msDelay(ms);
+	    		
 	    		// Turn back to start position
-	    		car.backward(power, 0);
+	    		car.turnLightSensor(power, LEFT);
 	    		Delay.msDelay(ms);
 	    	
 	    		// Follow light for a while

@@ -17,6 +17,7 @@ public class PrivateCar implements Car
                       backward = 2,
                       stop     = 3;
 	                         
+    private MotorPort lightMotor = MotorPort.A;
     private MotorPort leftMotor = MotorPort.B;
     private MotorPort rightMotor= MotorPort.C;
 	
@@ -26,8 +27,19 @@ public class PrivateCar implements Car
    
     public void stop() 
     {
+    	lightMotor.controlMotor(0, stop);
 	    leftMotor.controlMotor(0,stop);
 	    rightMotor.controlMotor(0,stop);
+    }
+    
+    public void turnLightSensor(int power, String direction)
+    {
+    	if(direction.equals("LEFT")) {
+    		lightMotor.controlMotor(power, forward);
+    	} 
+    	else if(direction.equals("RIGHT")) {
+    		lightMotor.controlMotor(power, backward);
+    	}
     }
    
     public void forward(int leftPower, int rightPower)

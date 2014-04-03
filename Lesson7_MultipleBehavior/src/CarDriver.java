@@ -16,6 +16,7 @@ public class CarDriver {
 	// Commands for the motors
 	final int forward = 1, backward = 2, stop = 3;
 
+	private MotorPort lightMotor = MotorPort.A;
 	private MotorPort leftMotor = MotorPort.C;
 	private MotorPort rightMotor = MotorPort.B;
 
@@ -38,7 +39,12 @@ public class CarDriver {
 
 		if (command.command == CarCommand.Command.SPIN) {
 			performSpin(command);
-		} else {
+		} else if (command.command == CarCommand.Command.TURN_LIGHT_SENSOR_LEFT) {
+			turnLightSensor(command.lightPower, "LEFT");
+		} else if(command.command == CarCommand.Command.TURN_LIGHT_SENSOR_RIGHT) {
+			turnLightSensor(command.lightPower, "RIGHT");
+		}
+		else {
 			leftMotor.controlMotor(command.leftPower, ccToMc(command.command));
 			rightMotor.controlMotor(command.rightPower, ccToMc(command.command));
 		}
@@ -53,4 +59,14 @@ public class CarDriver {
 			rightMotor.controlMotor(command.rightPower, forward);
 		}
 	}
+	
+    private void turnLightSensor(int power, String direction)
+    {
+    	if(direction.equals("LEFT")) {
+    		lightMotor.controlMotor(power, forward);
+    	} 
+    	else if(direction.equals("RIGHT")) {
+    		lightMotor.controlMotor(power, backward);
+    	}
+    }
 }
