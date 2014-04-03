@@ -14,7 +14,7 @@ class Follow extends Thread
     private final String LEFT = "LEFT";
     private final String RIGHT = "RIGHT";
 
-	private int power = 70, ms = 500;
+	private int power = 70, ms = 500, lightDelay = 100;
 	LightSensor light = new LightSensor(SensorPort.S4);
 	
 	int frontLight, leftLight, rightLight, delta;
@@ -45,14 +45,14 @@ class Follow extends Thread
 	    		// Get the light to the left
 	    		car.turnLightSensor(power, LEFT);
 	    		//car.forward(0, power);
-	    		Delay.msDelay(ms);
+	    		Delay.msDelay(lightDelay);
 	    		leftLight = light.getLightValue();
 	    		
 	    		// Get the light to the right
 	    		car.turnLightSensor(power, RIGHT);
-	    		Delay.msDelay(ms);
+	    		Delay.msDelay(lightDelay);
 	    		car.turnLightSensor(power, RIGHT);
-	    		Delay.msDelay(ms);
+	    		Delay.msDelay(lightDelay);
 	    		rightLight = light.getLightValue();
 	    		
 	    		//car.backward(0, power);
@@ -62,7 +62,8 @@ class Follow extends Thread
 	    		
 	    		// Turn back to start position
 	    		car.turnLightSensor(power, LEFT);
-	    		Delay.msDelay(ms);
+	    		Delay.msDelay(lightDelay);
+	    		car.stopLightSensor();
 	    	
 	    		// Follow light for a while
 	    		delta = leftLight-rightLight;

@@ -46,6 +46,8 @@ public class CarDriver {
 			turnLightSensor(command.lightPower, "LEFT");
 		} else if(command.command == CarCommand.Command.TURN_LIGHT_SENSOR_RIGHT) {
 			turnLightSensor(command.lightPower, "RIGHT");
+		} else if(command.command == CarCommand.Command.STOP_LIGHT_SENSOR) {
+			lightMotor.controlMotor(0, stop);
 		} else {
 			leftMotor.controlMotor(command.leftPower, ccToMc(command.command));
 			rightMotor.controlMotor(command.rightPower, ccToMc(command.command));

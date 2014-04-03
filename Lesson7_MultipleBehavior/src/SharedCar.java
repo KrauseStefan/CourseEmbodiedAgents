@@ -59,6 +59,13 @@ public class SharedCar implements Car
     	}
     }
     
+    public void stopLightSensor()
+    {
+    	carCommand.command = CarCommand.Command.STOP_LIGHT_SENSOR;
+    	carCommand.lightPower = 0;
+    	commandReady = true;
+    }
+    
     public void noCommand()
     {
     	commandReady = false;
