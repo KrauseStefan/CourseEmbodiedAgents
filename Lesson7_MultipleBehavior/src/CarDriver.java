@@ -1,4 +1,5 @@
 import lejos.nxt.*;
+import lejos.util.Delay;
 
 /*
  * A car driver module with a method to drive
@@ -38,19 +39,37 @@ public class CarDriver {
 
 		if (command.command == CarCommand.Command.SPIN) {
 			performSpin(command);
+		} else if (command.command == CarCommand.Command.BACKSPIN) {
+			performBackspin(command);
 		} else {
 			leftMotor.controlMotor(command.leftPower, ccToMc(command.command));
-			rightMotor.controlMotor(command.rightPower, ccToMc(command.command));
+			rightMotor
+					.controlMotor(command.rightPower, ccToMc(command.command));
 		}
 	}
 
+	private void performBackspin(CarCommand command) {
+		CarCommand carCommand = new CarCommand();
+		carCommand.command = CarCommand.Command.BACKWARD;
+		carCommand.leftPower = command.leftPower;
+		carCommand.rightPower = command.rightPower;
+		perform(carCommand); // go backwards
+		Delay.msDelay(command.spinDelay);
+		
+		performSpin(command); // spin the vehicle
+		
+
+	}
+
 	private void performSpin(CarCommand command) {
-		if (command.spinDelay > 0) {
+		if (command.direction == "right") {
 			leftMotor.controlMotor(command.leftPower, forward);
 			rightMotor.controlMotor(command.rightPower, backward);
-		} else if (command.spinDelay < 0) {
+			Delay.msDelay(command.spinDelay);
+		} else if (command.direction == "left") {
 			leftMotor.controlMotor(command.leftPower, backward);
 			rightMotor.controlMotor(command.rightPower, forward);
+			Delay.msDelay(command.spinDelay);
 		}
 	}
 }
