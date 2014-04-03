@@ -82,4 +82,13 @@ public class SharedCar implements Car
     	carCommand.spinDelay = ms;
     	commandReady = true;
     }
+    
+    public void backspin(int ms, int power, String direction){
+    	carCommand.command = CarCommand.Command.BACKSPIN;
+    	carCommand.leftPower = power;
+    	carCommand.rightPower = power;
+    	carCommand.spinDelay = ms;
+    	carCommand.direction = direction;
+    	commandReady = true;
+    }
 }
