@@ -1,5 +1,6 @@
 
 import lejos.nxt.*;
+import lejos.util.Delay;
 /**
  * A locomotion module with methods to drive
  * a differential car with two independent motors. The left motor 
@@ -40,4 +41,19 @@ public class PrivateCar implements Car
 	    leftMotor.controlMotor(leftPower,backward);
 	    rightMotor.controlMotor(rightPower,backward);
     }
+    
+    public void spin(int ms, int power)
+    {
+    	if(ms < 0){
+    	    leftMotor.controlMotor(power,forward);
+    	    rightMotor.controlMotor(power,backward);
+    	}else if(ms > 0){
+    	    leftMotor.controlMotor(power, backward);
+    	    rightMotor.controlMotor(power, forward);
+    	}
+    	
+		Delay.msDelay(ms);    	
+		stop();    	
+    }
+    
 }

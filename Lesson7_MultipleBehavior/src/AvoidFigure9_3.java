@@ -58,7 +58,12 @@ public class AvoidFigure9_3 {
             rightDistance = sonar.getDistance();
 	    	
             // Turn in the direction with most space in front of the car
-            if ( leftDistance > rightDistance ){
+            
+            if(leftDistance < stopThreshold && rightDistance < stopThreshold && frontDistance < stopThreshold){
+            	car.backward(power, power);
+            	Delay.msDelay(ms);
+            	car.spin(ms*4, power);            	
+            }else  if ( leftDistance > rightDistance ){
             	car.backward(power, 0);
             	Delay.msDelay(ms);
             	car.forward(0, power);
