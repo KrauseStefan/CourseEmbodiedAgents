@@ -9,8 +9,8 @@ import lejos.nxt.SoundSensor;
 
 public class second {
 
-	final static int power = 80;
-	static LightSensor ls;
+	private final static int power = 80;
+	private static LightSensor ls;
 	
 	public static void main (String[] aArg)
 			throws Exception
