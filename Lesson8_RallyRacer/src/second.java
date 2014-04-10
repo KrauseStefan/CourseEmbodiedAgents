@@ -19,9 +19,10 @@ public class second {
 				BlackWhiteSensor sensorLeft = new BlackWhiteSensor(SensorPort.S2);
 				//sensorLeft.calibrate();
 				BlackWhiteSensor sensorRight = new BlackWhiteSensor(SensorPort.S1);
-				sensorRight.blackLightValue = sensorLeft.blackLightValue = 403;
-				sensorRight.blackWhiteThreshold = sensorLeft.blackWhiteThreshold = 470;
-				sensorRight.whiteLightValue = sensorLeft.whiteLightValue = 541;
+				sensorRight.blackLightValue = sensorLeft.blackLightValue = 467; //392; // 403;
+				sensorRight.whiteLightValue = sensorLeft.whiteLightValue = 584; //595; //541;
+				sensorRight.blackWhiteThreshold = sensorLeft.blackWhiteThreshold = 525; //492; //470;
+
 				
 				LCD.clear();
 				Thread.sleep(1000);
@@ -61,37 +62,73 @@ public class second {
 					}
 					Long startTime = System.currentTimeMillis();
 					
+				    LCD.clear();
+				    LCD.drawString("op1: start", 0, 0);
+					driveForward.forward(200, 80);
+				
 					
-					driveForward.forward(50, 100);
-					lineFol.start(1, 1, 100, 1200);
-					sving.run(0, 80, 0);
+					LCD.clear();
+				    LCD.drawString("op1: linefol", 0, 0);
+					lineFol.start(1, 1, 90, 1600); //90 // 100
+					
+
+				    LCD.clear();
+				    LCD.drawString("op1: sving", 0, 0);
+					sving.run(0, 80, 0); //80
+
 					
 					Sound.beep();
-					
+				    LCD.clear();
+				    LCD.drawString("op2: run", 0, 0);
 					catchLineSecond.run(1, 80, sensorLeft, sensorRight, 0);
 					
-					
-					
-					
+					LCD.clear();
+				    LCD.drawString("op2: linefol", 0, 0);
 					lineFol.start(1, 2, 100, 800);
 					
+					LCD.clear();
+				    LCD.drawString("op2: sving", 0, 0);
 					sving.run(1, 80, 0);
-						
+					
+					LCD.clear();
+				    LCD.drawString("op3: run", 0, 0);
 					catchLineSecond.run(0, 80, sensorLeft, sensorRight, 0);
 					
+					LCD.clear();
+				    LCD.drawString("op3: linefol", 0, 0);
 					lineFol.start(1, 1, 100, 1200);
 					
 					Sound.beep();
+					LCD.clear();
+				    LCD.drawString("top: forward", 0, 0);
 					driveForward.forward(50, 80);
+					
+					LCD.clear();
+				    LCD.drawString("top: linefol", 0, 0);
 					lineFol.start(1, 1, 80, 500);
 					
+					LCD.clear();
+				    LCD.drawString("top: backward", 0, 0);
 					driveBackward.backward(50, 100,100);
+					
+					LCD.clear();
+				    LCD.drawString("top: turn", 0, 0);
 					turn.run(100, 60, sensorLeft);
 					
+					LCD.clear();
+				    LCD.drawString("ned3: linefol", 0, 0);
 					lineFolDown.start(1, 1, 80, 1200, 0);
 					
+					LCD.clear();
+				    LCD.drawString("ned3: sving", 0, 0);
 					sving.run(0, 80, 1);
+					
+					LCD.clear();
+				    LCD.drawString("ned2: forward", 0, 0);
 					driveForward.forward(100, 80);
+					
+					LCD.clear();
+				    LCD.drawString("ned2: run", 0, 0);
 					catchLineSecond.run(1, 75, sensorLeft, sensorRight, 1);
 					
 					

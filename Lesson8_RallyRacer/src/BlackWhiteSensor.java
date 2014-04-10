@@ -24,6 +24,7 @@ public class BlackWhiteSensor {
    public static void main(String[] args)
    {
 	   BlackWhiteSensor BWS = new BlackWhiteSensor(SensorPort.S1); 
+	   BlackWhiteSensor BWS2 = new BlackWhiteSensor(SensorPort.S2);
 	   BWS.calibrate();
 	   
 	   LCD.clear();

@@ -21,7 +21,7 @@ public class pdLineFolSecond
 		state = _initialPosition;
 		BlackWhiteSensor sensor = _lightPort==1?sensorLeft:sensorRight;
 		
-		int initialTacho = MotorPort.B.getTachoCount();
+		 int initialTacho = MotorPort.B.getTachoCount();
 		
 		
 	     int error=0;
@@ -30,7 +30,7 @@ public class pdLineFolSecond
 	     int lastError = 0;
 	     float derivative = 0;
 	     
-	     float scale = maxError/68;
+	     float scale = maxError/68; //68;
 	     float kp = 0.3f;
 	     float kd = 3f;
 	     
@@ -50,7 +50,7 @@ public class pdLineFolSecond
 	     lastLightLeft = sensorLeft.light();
 	     lastError = sensor.blackLightValue - lightLeft;
 	     
-	     while (MotorPort.B.getTachoCount()-initialTacho < tacho || (lightLeft > sensorLeft.blackLightValue+30*scale && lightRight > sensorLeft.blackLightValue+30*scale))
+	     while (MotorPort.B.getTachoCount()-initialTacho < tacho || (lightLeft > sensorLeft.blackLightValue+40*scale && lightRight > sensorRight.blackLightValue+40*scale))
 	     {
 	    	long a = System.currentTimeMillis() + 10;
 	    	
@@ -58,12 +58,12 @@ public class pdLineFolSecond
 	    	{
 	    		lightLeft = sensorLeft.light();
 	    		lightRight = sensorRight.light();
-	    		if(!(MotorPort.B.getTachoCount()-initialTacho < tacho || (lightLeft > sensorLeft.blackLightValue+30*scale && lightRight > sensorLeft.blackLightValue+30*scale)))
+	    		if(!(MotorPort.B.getTachoCount()-initialTacho < tacho || (lightLeft > sensorLeft.blackLightValue+30*scale && lightRight > sensorRight.blackLightValue+30*scale)))
 	    			break;
 	    	}
 			
-			//error = (sensor.whiteLightValue - lightRight) - (sensor.whiteLightValue - lightLeft);//error = sensor.blackWhiteThreshold - light;
-			error =  (sensor.whiteLightValue - lightRight) - (sensor.whiteLightValue - lightLeft);
+			error = (sensor.whiteLightValue - lightRight) - (sensor.whiteLightValue - lightLeft);//error = sensor.blackWhiteThreshold - light;
+			//error =  (sensor.whiteLightValue - lightRight) - (sensor.whiteLightValue - lightLeft);
 			
 		     derivative = error - lastError;
 		     

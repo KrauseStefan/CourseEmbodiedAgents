@@ -33,7 +33,7 @@ public class sving {
 			iniTachoB = MotorPort.B.getTachoCount();
 			iniTachoC = MotorPort.C.getTachoCount();
 			
-			while(MotorPort.C.getTachoCount()- iniTachoC < 630)
+			while(MotorPort.C.getTachoCount()- iniTachoC < 560)  //630)
 			{
 				error = (int) ((MotorPort.B.getTachoCount() - iniTachoB)*2.5 - (MotorPort.C.getTachoCount() - iniTachoC));
 				
@@ -44,7 +44,7 @@ public class sving {
 			    Car.forward(turn + power > 100?100:(power + turn), power - turn>100?100:(power - turn));
 			}
 		}
-		else
+		else //retning == 1
 		{
 			driveForward.forward(100, 90);
 			while(MotorPort.C.getTachoCount()- iniTachoC < 35)
@@ -54,7 +54,7 @@ public class sving {
 			iniTachoB = MotorPort.B.getTachoCount();
 			iniTachoC = MotorPort.C.getTachoCount();			
 			
-		    while(MotorPort.B.getTachoCount()- iniTachoB < 590)
+		    while(MotorPort.B.getTachoCount()- iniTachoB < 520) //590)
 			{
 				error = (int) ((MotorPort.B.getTachoCount() - iniTachoB) - (MotorPort.C.getTachoCount() - iniTachoC)*2.5);
 				

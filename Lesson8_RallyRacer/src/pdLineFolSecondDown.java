@@ -30,7 +30,7 @@ public class pdLineFolSecondDown
 	     int lastError = 0;
 	     float derivative = 0;
 	     
-	     float scale = maxError/68;
+	     float scale = maxError/68; //maxError/68;
 	     float kp = 0.1f;
 	     float kd = 1.1f;
 	     
@@ -44,8 +44,9 @@ public class pdLineFolSecondDown
 	     
 	     
 	     //DataLogger dataLogger = new DataLogger("dpLine.txt");
-	     
+
 	     Car.forward(power, power);
+	     
 	     
 	     lastLightLeft = sensorLeft.light();
 	     lastError = sensor.blackLightValue - lightLeft;
