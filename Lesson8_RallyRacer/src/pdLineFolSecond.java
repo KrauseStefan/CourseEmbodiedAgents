@@ -43,7 +43,7 @@ public class pdLineFolSecond
 	     int powerRight = 0;
 	     
 	     
-	     DataLogger dataLogger = new DataLogger("dpLine.txt");
+	     //DataLogger dataLogger = new DataLogger("dpLine.txt");
 	     
 	     Car.forward(power, power);
 	     
@@ -79,6 +79,6 @@ public class pdLineFolSecond
 		     lastLightRight = lightRight;
 		     
 	     }
-	     dataLogger.close();
+	    // dataLogger.close();
 	}
 }
