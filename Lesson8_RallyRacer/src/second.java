@@ -69,7 +69,7 @@ public class second {
 					
 					LCD.clear();
 				    LCD.drawString("op1: linefol", 0, 0);
-					lineFol.start(1, 1, 90, 1600); //90 // 100
+					lineFol.start(1, 90, 1750); //90 // 100
 					
 
 				    LCD.clear();
@@ -81,10 +81,10 @@ public class second {
 				    LCD.clear();
 				    LCD.drawString("op2: run", 0, 0);
 					catchLineSecond.run(1, 80, sensorLeft, sensorRight, 0);
-					
+					//her går det galt
 					LCD.clear();
 				    LCD.drawString("op2: linefol", 0, 0);
-					lineFol.start(1, 2, 100, 800);
+					lineFol.start(1, 90, 800);
 					
 					LCD.clear();
 				    LCD.drawString("op2: sving", 0, 0);
@@ -96,7 +96,7 @@ public class second {
 					
 					LCD.clear();
 				    LCD.drawString("op3: linefol", 0, 0);
-					lineFol.start(1, 1, 100, 1200);
+					lineFol.start(1, 90, 1200);
 					
 					Sound.beep();
 					LCD.clear();
@@ -105,7 +105,7 @@ public class second {
 					
 					LCD.clear();
 				    LCD.drawString("top: linefol", 0, 0);
-					lineFol.start(1, 1, 80, 500);
+					lineFol.start(1, 80, 500);
 					
 					LCD.clear();
 				    LCD.drawString("top: backward", 0, 0);

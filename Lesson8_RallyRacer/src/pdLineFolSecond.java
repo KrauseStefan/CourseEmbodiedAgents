@@ -8,7 +8,6 @@ public class pdLineFolSecond
 {
 	BlackWhiteSensor sensorLeft;
 	BlackWhiteSensor sensorRight;
-	int state = 2; // 0 = {car|}, 1 = {|car|}, 2 = {|car}
 	
 	pdLineFolSecond(BlackWhiteSensor _sensorLeft, BlackWhiteSensor _sensorRight)
 	{ 
@@ -16,9 +15,8 @@ public class pdLineFolSecond
 		sensorRight = _sensorRight;
 	}
 	
-	void start(int _lightPort, int _initialPosition, int power, int tacho) throws InterruptedException
+	void start(int _lightPort, int power, int tacho) throws InterruptedException
 	{
-		state = _initialPosition;
 		BlackWhiteSensor sensor = _lightPort==1?sensorLeft:sensorRight;
 		
 		 int initialTacho = MotorPort.B.getTachoCount();
