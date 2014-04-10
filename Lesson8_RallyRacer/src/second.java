@@ -10,14 +10,11 @@ import lejos.nxt.SoundSensor;
 public class second {
 
 	private final static int power = 80;
-	private static LightSensor ls;
 	
 	public static void main (String[] aArg)
 			throws Exception
 			{
-				ls = new LightSensor(SensorPort.S1); 
-				// Use the light sensor as a reflection sensor
-				ls.setFloodlight(true);
+
 				
 				BlackWhiteSensor sensorLeft = new BlackWhiteSensor(SensorPort.S2);
 				//sensorLeft.calibrate();
