@@ -12,4 +12,5 @@ public interface Car
     public void stop();   
     public void forward(int leftPower, int rightPower);  
     public void backward(int leftPower, int rightPower);
+    public void turnLightSensor(int power, String direction);
 }
