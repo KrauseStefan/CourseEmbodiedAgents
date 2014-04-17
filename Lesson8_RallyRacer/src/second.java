@@ -19,21 +19,21 @@ public class second {
 				BlackWhiteSensor sensorLeft = new BlackWhiteSensor(SensorPort.S2);
 				//sensorLeft.calibrate();
 				BlackWhiteSensor sensorRight = new BlackWhiteSensor(SensorPort.S1);
-				sensorRight.blackLightValue = sensorLeft.blackLightValue = 467; //392; // 403;
-				sensorRight.whiteLightValue = sensorLeft.whiteLightValue = 584; //595; //541;
-				sensorRight.blackWhiteThreshold = sensorLeft.blackWhiteThreshold = 525; //492; //470;
+				sensorRight.blackLightValue = sensorLeft.blackLightValue = 467; 
+				sensorRight.whiteLightValue = sensorLeft.whiteLightValue = 584; 
+				sensorRight.blackWhiteThreshold = sensorLeft.blackWhiteThreshold = 525; 
 
 				
 				LCD.clear();
 				Thread.sleep(1000);
-				while(!Button.ENTER.isPressed())
+				/*while(!Button.ENTER.isPressed())
 				{
 					LCD.drawString("Left: "+sensorLeft.light(), 0, 0);
 					LCD.drawString("Right: "+sensorRight.light(), 0, 1);
 					
 					Thread.sleep(100);
 					LCD.clear();
-				}
+				}*/
 				
 				
 				pdLineFolSecond lineFol = new pdLineFolSecond(sensorLeft, sensorRight);
@@ -69,43 +69,44 @@ public class second {
 					
 					LCD.clear();
 				    LCD.drawString("op1: linefol", 0, 0);
-					lineFol.start(1, 90, 1750); //90 // 100
-					
+					lineFol.start(1, 100, 1850); //90 // 100
+				
 
 				    LCD.clear();
 				    LCD.drawString("op1: sving", 0, 0);
-					sving.run(0, 80, 0); //80
-
+					driveForward.forward(690,100,80);
 					
-					Sound.beep();
-				    LCD.clear();
-				    LCD.drawString("op2: run", 0, 0);
-					catchLineSecond.run(1, 80, sensorLeft, sensorRight, 0);
-					//her går det galt
+
 					LCD.clear();
 				    LCD.drawString("op2: linefol", 0, 0);
-					lineFol.start(1, 90, 800);
+					lineFol.start(1, 100, 1900);
 					
-					LCD.clear();
+
+				    LCD.clear();
 				    LCD.drawString("op2: sving", 0, 0);
-					sving.run(1, 80, 0);
+					driveForward.forward(850,75,100);
 					
-					LCD.clear();
-				    LCD.drawString("op3: run", 0, 0);
-					catchLineSecond.run(0, 80, sensorLeft, sensorRight, 0);
-					
+
 					LCD.clear();
 				    LCD.drawString("op3: linefol", 0, 0);
-					lineFol.start(1, 90, 1200);
+					lineFol.start(1, 100, 1900);
+
+					/*
+
 					
+
 					Sound.beep();
 					LCD.clear();
-				    LCD.drawString("top: forward", 0, 0);
-					driveForward.forward(50, 80);
-					
+				    LCD.drawString("top", 0, 0);
+				    driveBackward.backward(50, 100, 100);
+				    turn.run(200, 100, sensorLeft);
+				    
+
 					LCD.clear();
-				    LCD.drawString("top: linefol", 0, 0);
-					lineFol.start(1, 80, 500);
+				    LCD.drawString("down1: linefol", 0, 0);
+					lineFol.start(1, 100, 1900);
+					
+
 					
 					LCD.clear();
 				    LCD.drawString("top: backward", 0, 0);
@@ -141,7 +142,7 @@ public class second {
 					lineFolDown.start(1, 2, 80, 1000, 1);
 					
 					driveForward.forward(500, 80);
-					
+					*/
 					Car.stop();
 					LCD.clear();
 					LCD.drawString("time:", 0, 0);
