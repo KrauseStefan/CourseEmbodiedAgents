@@ -26,18 +26,9 @@ public class second {
 				
 				LCD.clear();
 				Thread.sleep(1000);
-				/*while(!Button.ENTER.isPressed())
-				{
-					LCD.drawString("Left: "+sensorLeft.light(), 0, 0);
-					LCD.drawString("Right: "+sensorRight.light(), 0, 1);
-					
-					Thread.sleep(100);
-					LCD.clear();
-				}*/
 				
 				
 				pdLineFolSecond lineFol = new pdLineFolSecond(sensorLeft, sensorRight);
-				pdLineFolSecondDown lineFolDown = new pdLineFolSecondDown(sensorLeft, sensorRight);
 				
 				int power = 100;
 				Thread.sleep(1000);
@@ -91,58 +82,6 @@ public class second {
 				    LCD.drawString("op3: linefol", 0, 0);
 					lineFol.start(1, 100, 1900);
 
-					/*
-
-					
-
-					Sound.beep();
-					LCD.clear();
-				    LCD.drawString("top", 0, 0);
-				    driveBackward.backward(50, 100, 100);
-				    turn.run(200, 100, sensorLeft);
-				    
-
-					LCD.clear();
-				    LCD.drawString("down1: linefol", 0, 0);
-					lineFol.start(1, 100, 1900);
-					
-
-					
-					LCD.clear();
-				    LCD.drawString("top: backward", 0, 0);
-					driveBackward.backward(50, 100,100);
-					
-					LCD.clear();
-				    LCD.drawString("top: turn", 0, 0);
-					turn.run(100, 60, sensorLeft);
-					
-					LCD.clear();
-				    LCD.drawString("ned3: linefol", 0, 0);
-					lineFolDown.start(1, 1, 80, 1200, 0);
-					
-					LCD.clear();
-				    LCD.drawString("ned3: sving", 0, 0);
-					sving.run(0, 80, 1);
-					
-					LCD.clear();
-				    LCD.drawString("ned2: forward", 0, 0);
-					driveForward.forward(100, 80);
-					
-					LCD.clear();
-				    LCD.drawString("ned2: run", 0, 0);
-					catchLineSecond.run(1, 75, sensorLeft, sensorRight, 1);
-					
-					
-					lineFolDown.start(1, 2, 80, 1200, 0);
-					
-					sving.run(1, 80, 1);
-
-					catchLineSecond.run(0, 75, sensorLeft, sensorRight, 1);
-					
-					lineFolDown.start(1, 2, 80, 1000, 1);
-					
-					driveForward.forward(500, 80);
-					*/
 					Car.stop();
 					LCD.clear();
 					LCD.drawString("time:", 0, 0);
