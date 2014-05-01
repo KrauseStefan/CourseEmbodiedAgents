@@ -44,8 +44,9 @@ public class Arbitrator
     /**
      * This method starts the arbitration of Behaviors and runs an endless loop.
      * The start() method will never return
+     * @throws InterruptedException 
      */
-     public void start()
+     public void start() throws InterruptedException
      {
          int highest, maxPriority;
 	     
