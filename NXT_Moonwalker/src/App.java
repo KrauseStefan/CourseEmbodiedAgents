@@ -22,7 +22,6 @@ public class App {
 		LightSensor lightSensor = new LightSensor(SensorPort.S1); //TODO: Correct port
 		ColorSensor colorSensor = new ColorSensor(SensorPort.S4);
 
-		LineMap lineMap = new TrackLineMap(); //TODO make the actual map
 		SolarPanelDetector colorDetector = new SolarPanelDetector(colorSensor);
 		
 //		DifferentialPilot dp = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, leftMotor, rightMotor);
