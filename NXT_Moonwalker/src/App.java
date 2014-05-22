@@ -54,7 +54,7 @@ public class App {
 			
 			@Override
 			public void buttonPressed(Button b) {
-				ClawController.TurnClaw(170, 30);
+				ClawController.TurnClaw(170, 70);
 				//cg.startTurn(true);
 			}
 		});
@@ -66,7 +66,7 @@ public class App {
 			
 			@Override
 			public void buttonPressed(Button b) {
-				ClawController.TurnClaw(170,30);
+				ClawController.TurnClaw(170,70);
 				//cg.startTurn(false);
 			}
 		});
