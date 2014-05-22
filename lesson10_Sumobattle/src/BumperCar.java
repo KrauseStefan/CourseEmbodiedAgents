@@ -20,26 +20,26 @@ import lejos.nxt.*;
 public class BumperCar
 {
 
-  public static void main(String[] args)
+  public static void main(String[] args) throws InterruptedException
   {
     Motor.A.setSpeed(400);
     Motor.C.setSpeed(400);
-    Behavior b1 = new DriveForward();
-    Behavior b2 = new DetectWall();
-    Behavior b3 = new Exit();
+    Behavior b1 = new DriveForwardBC();
+    Behavior b2 = new DetectWallBC();
+    Behavior b3 = new ExitBC();
     Behavior[] behaviorList =
     {
       b1, b2, b3
     };
     Arbitrator arbitrator = new Arbitrator(behaviorList);
     LCD.drawString("Bumper Car",0,1);
-    Button.waitForPress();
+    Button.waitForAnyPress();
     arbitrator.start();
   }
 }
 
 
-class DriveForward implements Behavior
+class DriveForwardBC implements Behavior
 {
 
   private boolean _suppressed = false;
@@ -71,13 +71,13 @@ class DriveForward implements Behavior
 }
 
 
-class DetectWall extends Thread implements Behavior
+class DetectWallBC extends Thread implements Behavior
 {
   private boolean _suppressed = false;
   private boolean active = false;
   private int distance = 255;
 
-  public DetectWall()
+  public DetectWallBC()
   {
     touch = new TouchSensor(SensorPort.S1);
     sonar = new UltrasonicSensor(SensorPort.S3);
@@ -149,7 +149,7 @@ class DetectWall extends Thread implements Behavior
   private UltrasonicSensor sonar;
 }
 
-class Exit implements Behavior
+class ExitBC implements Behavior
 {
   private boolean _suppressed = false;
 

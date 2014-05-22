@@ -31,8 +31,9 @@ public interface Behavior {
    *    return 0; <BR>
    * } <BR>
    * @return integer  Indicates if this Behavior should seize control.
+ * @throws InterruptedException 
    */
-   public int takeControl();
+   public int takeControl() throws InterruptedException;
    
    /**
    * The code in action() represents the tasks  the robot performs when this
