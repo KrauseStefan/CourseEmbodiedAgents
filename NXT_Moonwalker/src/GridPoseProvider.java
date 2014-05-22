@@ -1,7 +1,6 @@
 import lejos.nxt.LCD;
 import lejos.nxt.LightSensor;
 import lejos.robotics.localization.OdometryPoseProvider;
-import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.MoveProvider;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;

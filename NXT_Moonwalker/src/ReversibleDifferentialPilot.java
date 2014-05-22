@@ -1,11 +1,14 @@
+import java.util.LinkedList;
+
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.RegulatedMotorListener;
 import lejos.robotics.navigation.ArcRotateMoveController;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Move;
 import lejos.robotics.navigation.MoveListener;
+import lejos.robotics.navigation.MoveProvider;
 
-public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcRotateMoveController {
+public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcRotateMoveController, MoveListener {
 
 	DifferentialPilot pFwd;
 	DifferentialPilot pBck;
@@ -13,7 +16,9 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 
 	RegulatedMotor leftMotor;
 	RegulatedMotor rightMotor;
-	
+
+	LinkedList<MoveListener> moveListeners = new LinkedList<>();
+
 	public ReversibleDifferentialPilot(final double wheelDiameter, final double trackWidth, final RegulatedMotor leftMotor,
 			final RegulatedMotor rightMotor) {
 		this(wheelDiameter, trackWidth, leftMotor, rightMotor, false);
@@ -27,15 +32,22 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 
 		pBck = new DifferentialPilot(wheelDiameter, trackWidth, rightMotor, leftMotor, !reverse);
 		pCur = pFwd = new DifferentialPilot(wheelDiameter, trackWidth, leftMotor, rightMotor, reverse);
-		
-	}
 
+		pFwd.addMoveListener(this);
+		pBck.addMoveListener(this);
+
+	}
 
 	public void reverse() {
 		leftMotor.resetTachoCount();
 		rightMotor.resetTachoCount();
 
-		pCur = (pFwd == pCur ? pBck : pFwd);
+		if (pFwd == pCur) {
+			pCur = pBck;
+		} else {
+			pCur = pFwd;
+		}
+
 	}
 
 	public void setAcceleration(int acceleration) {
@@ -151,9 +163,7 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 
 	@Override
 	public void addMoveListener(MoveListener listener) {
-		pFwd.addMoveListener(listener);
-		pBck.addMoveListener(listener);
-
+		moveListeners.add(listener);
 	}
 
 	@Override
@@ -194,6 +204,26 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 	@Override
 	public void rotationStopped(RegulatedMotor motor, int tachoCount, boolean stalled, long timeStamp) {
 		pCur.rotationStopped(motor, tachoCount, stalled, timeStamp);
+
+	}
+
+	@Override
+	public void moveStarted(Move event, MoveProvider mp) {
+
+		if (pCur == mp) {
+			for (MoveListener listner : moveListeners) {
+				listner.moveStarted(event, mp);
+			}
+		}
+	}
+
+	@Override
+	public void moveStopped(Move event, MoveProvider mp) {
+		if (pCur == mp) {
+			for (MoveListener listner : moveListeners) {
+				listner.moveStopped(event, mp);
+			}
+		}
 
 	}
 }

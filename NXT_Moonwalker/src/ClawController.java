@@ -1,4 +1,3 @@
-import lejos.robotics.navigation.Pose;
 import lejos.nxt.*;
 
 public class ClawController {

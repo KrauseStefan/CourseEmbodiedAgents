@@ -55,12 +55,31 @@ public class UtilityScenarios {
 		float y = (float) GridPoseProvider.LINE_SEPERATION_Y;
 
 		while (true) {
-			squareCounterClock(navigator, x, y);
+			rectangleClock(navigator, x, y);
 //			squareClock(navigator, x, y);
-			navigator.followPath();
-			navigator.waitForStop();
-			navigator.rotatePanel();
 		}
+	}
+
+	
+	static void rectangleClock(TrackNavigator navigator, float x, float y) {
+		navigator.addWaypoint(x, 0);
+		navigator.followPath();
+		navigator.waitForStop();
+		
+		navigator.rotatePanel();
+
+		navigator.addWaypoint(2*x, 0);
+		navigator.addWaypoint(2*x, y);
+		navigator.addWaypoint(x, y);
+		navigator.followPath();
+		navigator.waitForStop();
+		
+		navigator.rotatePanel();
+		
+		navigator.addWaypoint(0, y);
+		navigator.addWaypoint(0, 0);
+		navigator.followPath();
+		navigator.waitForStop();
 	}
 
 	

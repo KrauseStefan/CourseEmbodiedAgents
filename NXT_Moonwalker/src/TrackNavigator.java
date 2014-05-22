@@ -33,7 +33,6 @@ public class TrackNavigator extends Navigator {
 		
 		getMoveController().reverse();
 		getPoseProvider().setPose(pose);
-				
 		
 	}
 	
