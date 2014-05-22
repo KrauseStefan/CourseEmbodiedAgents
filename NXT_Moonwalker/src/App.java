@@ -27,7 +27,7 @@ public class App {
 		
 //		DifferentialPilot dp = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, leftMotor, rightMotor);
 		ReversibleDifferentialPilot dp = new ReversibleDifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, leftMotor, rightMotor);
-		PoseProvider lineMapPoseProvider = new LineMapPoseProvider(dp, lightSensor, lineMap, BLACK, WHITE);
+		PoseProvider lineMapPoseProvider = new GridPoseProvider(dp, lightSensor, BLACK, WHITE);
 				
 		dp.setAcceleration((int) (1.6 * dp.getMaxTravelSpeed()));
 		TrackNavigator navigator = new TrackNavigator(dp, lineMapPoseProvider);
