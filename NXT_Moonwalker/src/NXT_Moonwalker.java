@@ -26,12 +26,7 @@ public class NXT_Moonwalker{
 	PanelState inspectPanel(){
 		return PanelState.Reversed; //FIXME: Dummy implementation		
 	}
-	
-	void rotatePanel(){
-		float heading = navigator.getPoseProvider().getPose().getHeading();
-		navigator.rotateTo(heading + 180); //overflow is handled gracefully				
-	}
-	
+		
 	void printPose(int nr){
 		printPose(nr, new Pose());
 	}
@@ -68,18 +63,23 @@ public class NXT_Moonwalker{
 		navigator.gridGoTo(0, 1, 0); // first panel
 				
 		navigator.gridGoTo(0, 2, 0);
+//		navigator.gridGoTo(1, 2, 0);
+//		rotatePanel();
+//		navigator.gridGoTo(2, 2, 0);
+//		rotatePanel();
 		navigator.gridGoTo(3, 2, 0);
-		while(navigator.isMoving()){
-			Thread.sleep(50);
-			printPose(3, navigator.getPoseProvider().getStartToStart());					
-		}
-//		navigator.waitForStop();
-		
-		printPose(4);		
-		if(inspectPanel() == PanelState.Reversed)
-			rotatePanel();
-
-		printPose(5);		
+//		navigator.rotatePanel();
+//		while(navigator.isMoving()){
+//			Thread.sleep(50);
+//			printPose(3, navigator.getPoseProvider().getStartToStart());					
+//		}
+////		navigator.waitForStop();
+//		
+//		printPose(4);		
+//		if(inspectPanel() == PanelState.Reversed)
+//			rotatePanel();
+//
+//		printPose(5);		
 //		gridGoTo(1, 2);
 //		
 //		if(inspectPanel() == PanelState.Reversed)

@@ -5,7 +5,7 @@ public class UtilityScenarios {
 	static double mesureLineDistance(TrackNavigator navigator) {
 
 		double speed = navigator.getMoveController().getTravelSpeed();
-//		navigator.getMoveController().setTravelSpeed(3);
+		// navigator.getMoveController().setTravelSpeed(3);
 
 		navigator.getMoveController().forward();
 		navigator.getPoseProvider().waitForLine();
@@ -22,7 +22,7 @@ public class UtilityScenarios {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		navigator.getPoseProvider().waitForLine();
 		navigator.getMoveController().stop(); // stop at secondLine
 
@@ -39,16 +39,30 @@ public class UtilityScenarios {
 	}
 
 	static void calibrationProgram(TrackNavigator navigator) {
-		int squareSize = 30;
-			
+		float x = (float) LineMapPoseProvider.LINE_SEPERATION_X;
+		float y = (float) LineMapPoseProvider.LINE_SEPERATION_Y;
+
 		while (true) {
-			navigator.addWaypoint(0, squareSize);
-			navigator.addWaypoint(squareSize, squareSize);
-			navigator.addWaypoint(squareSize, 0);
-			navigator.addWaypoint(0, 0);
+			squareCounterClock(navigator, x, y);
+//			squareClock(navigator, x, y);
 			navigator.followPath();
 			navigator.waitForStop();
 		}
+	}
+
+	static void squareClock(TrackNavigator navigator, float x, float y) {
+		navigator.addWaypoint(0, y);
+		navigator.addWaypoint(x, y);
+		navigator.addWaypoint(x, 0);
+		navigator.addWaypoint(0, 0);
+	}
+
+	static void squareCounterClock(TrackNavigator navigator, float x, float y) {
+		navigator.addWaypoint(0, y);
+		navigator.addWaypoint(-x, y);
+		navigator.addWaypoint(-x, 0);
+		navigator.addWaypoint(0, 0);
+
 	}
 
 }
