@@ -13,8 +13,8 @@ public class LineMapPoseProvider extends OdometryPoseProvider implements Runnabl
 	
 	public final float SENSOR_LINE_OFFSET = 6;
 	
-	public final double LINE_SEPERATION_X = (59.5079 + 59.5318) /4;
-	public final double LINE_SEPERATION_Y = (58.3235 + 58.2657) /4;
+	public static final double LINE_SEPERATION_X = (59.5079 + 59.5318) /4;
+	public static final double LINE_SEPERATION_Y = (58.3235 + 58.2657) /4;
 
 	private Thread self = null;
 	private LightSensor ls = null;

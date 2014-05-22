@@ -8,7 +8,10 @@ public class App {
 	final static double WHEEL_DIAMETER = 5.475;
 //	final static double TRACK_WIDTH = 17.2; // TODO: use correct values
 //	final static double TRACK_WIDTH = 17.4; // TODO: use correct values
-	final static double TRACK_WIDTH = 17.45; // TODO: use correct values
+//	final static double TRACK_WIDTH = 17.45; // TODO: use correct values
+//	final static double TRACK_WIDTH = 18.45; // TODO: use correct values
+//	final static double TRACK_WIDTH = 18.00; // TODO: use correct values
+	final static double TRACK_WIDTH = 17.90; // TODO: use correct values
 	
 	final static int BLACK = 460;
 	final static int WHITE = 670;
@@ -17,20 +20,18 @@ public class App {
 		NXTRegulatedMotor leftMotor = new NXTRegulatedMotor(MotorPort.A), rightMotor = new NXTRegulatedMotor(MotorPort.B);
 
 		LightSensor lightSensor = new LightSensor(SensorPort.S1); //TODO: Correct port
+		ColorSensor colorSensor = new ColorSensor(SensorPort.S4);
+
 		LineMap lineMap = new TrackLineMap(); //TODO make the actual map
+		SolarPanelDetector colorDetector = new SolarPanelDetector(colorSensor);
 		
-		DifferentialPilot dp = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, leftMotor, rightMotor);
+//		DifferentialPilot dp = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, leftMotor, rightMotor);
+		ReversibleDifferentialPilot dp = new ReversibleDifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, leftMotor, rightMotor);
 		PoseProvider lineMapPoseProvider = new LineMapPoseProvider(dp, lightSensor, lineMap, BLACK, WHITE);
-		
-//		 setTravelSpeed(.8f * getMaxTravelSpeed());
-//		    setAcceleration((int)(_robotTravelSpeed * 4));
-//		
-		
+				
 		dp.setAcceleration((int) (1.6 * dp.getMaxTravelSpeed()));
-		
-		NXT_Moonwalker program = new NXT_Moonwalker(new TrackNavigator(dp, lineMapPoseProvider));
-		
-		
+		TrackNavigator navigator = new TrackNavigator(dp, lineMapPoseProvider);
+		NXT_Moonwalker program = new NXT_Moonwalker(navigator);
 		
 		
 		Button.ESCAPE.addButtonListener(new ButtonListener() {
@@ -44,7 +45,9 @@ public class App {
 			}
 		});
 		
-		program.run();
+//		UtilityScenarios.calibrationProgram(navigator);
+		
+//		program.run();
 
 	}
 

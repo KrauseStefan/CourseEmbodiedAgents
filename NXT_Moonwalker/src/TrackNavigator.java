@@ -1,14 +1,15 @@
 import lejos.robotics.localization.PoseProvider;
-import lejos.robotics.navigation.MoveController;
 import lejos.robotics.navigation.Navigator;
-import lejos.robotics.navigation.Waypoint;
 
 
 public class TrackNavigator extends Navigator {
 
-	public TrackNavigator(MoveController pilot, PoseProvider poseProvider) {
+	public TrackNavigator(ReversibleDifferentialPilot pilot, PoseProvider poseProvider) {
 		super(pilot, poseProvider);
-		// TODO Auto-generated constructor stub
+	}
+	
+	public ReversibleDifferentialPilot getMoveController(){
+		return (ReversibleDifferentialPilot) super.getMoveController();
 	}
 	
 	public LineMapPoseProvider getPoseProvider(){
@@ -23,5 +24,14 @@ public class TrackNavigator extends Navigator {
 		this.goTo(this.getPoseProvider().gridGoTo(x, y, getPoseProvider().getPose().getHeading()));		
 	}
 
+	public void rotatePanel(){
+		float heading = getPoseProvider().getPose().getHeading();
+		rotateTo(heading + 180); //overflow is handled gracefully
+		waitForStop();
+		getMoveController().reverse();
+				
+		
+	}
+	
 	
 }
