@@ -33,6 +33,8 @@ public class App {
 		TrackNavigator navigator = new TrackNavigator(dp, lineMapPoseProvider);
 		NXT_Moonwalker program = new NXT_Moonwalker(navigator);
 		
+		final ClawController cg = new ClawController();
+		
 		
 		Button.ESCAPE.addButtonListener(new ButtonListener() {
 			@Override
@@ -44,6 +46,44 @@ public class App {
 				System.exit(0);
 			}
 		});
+		
+		Button.LEFT.addButtonListener(new ButtonListener() {
+			@Override
+			public void buttonReleased(Button b) {
+			cg.stopTurn();
+			}
+			
+			@Override
+			public void buttonPressed(Button b) {
+				ClawController.TurnClaw(170, 30);
+				//cg.startTurn(true);
+			}
+		});
+		Button.RIGHT.addButtonListener(new ButtonListener() {
+			@Override
+			public void buttonReleased(Button b) {
+				cg.stopTurn();
+			}
+			
+			@Override
+			public void buttonPressed(Button b) {
+				ClawController.TurnClaw(170,30);
+				//cg.startTurn(false);
+			}
+		});
+		
+		Button.ENTER.addButtonListener(new ButtonListener() {
+			@Override
+			public void buttonReleased(Button b) {
+			}
+			
+			@Override
+			public void buttonPressed(Button b) {
+				cg.setNextState();
+			}
+		});
+		
+		
 		
 //		UtilityScenarios.calibrationProgram(navigator);
 		
