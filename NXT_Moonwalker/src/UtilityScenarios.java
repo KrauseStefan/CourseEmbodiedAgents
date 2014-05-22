@@ -50,6 +50,20 @@ public class UtilityScenarios {
 		}
 	}
 
+	static void testReverse(TrackNavigator navigator) {
+		float x = (float) GridPoseProvider.LINE_SEPERATION_X;
+		float y = (float) GridPoseProvider.LINE_SEPERATION_Y;
+
+		while (true) {
+			squareCounterClock(navigator, x, y);
+//			squareClock(navigator, x, y);
+			navigator.followPath();
+			navigator.waitForStop();
+			navigator.rotatePanel();
+		}
+	}
+
+	
 	static void squareClock(TrackNavigator navigator, float x, float y) {
 		navigator.addWaypoint(0, y);
 		navigator.addWaypoint(x, y);

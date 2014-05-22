@@ -11,6 +11,9 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 	DifferentialPilot pBck;
 	DifferentialPilot pCur;
 
+	RegulatedMotor leftMotor;
+	RegulatedMotor rightMotor;
+	
 	public ReversibleDifferentialPilot(final double wheelDiameter, final double trackWidth, final RegulatedMotor leftMotor,
 			final RegulatedMotor rightMotor) {
 		this(wheelDiameter, trackWidth, leftMotor, rightMotor, false);
@@ -19,13 +22,19 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 	public ReversibleDifferentialPilot(final double wheelDiameter, final double trackWidth, final RegulatedMotor leftMotor,
 			final RegulatedMotor rightMotor, final boolean reverse) {
 
+		this.leftMotor = leftMotor;
+		this.rightMotor = rightMotor;
+
+		pBck = new DifferentialPilot(wheelDiameter, trackWidth, rightMotor, leftMotor, !reverse);
 		pCur = pFwd = new DifferentialPilot(wheelDiameter, trackWidth, leftMotor, rightMotor, reverse);
-		pBck = pFwd; // new DifferentialPilot(wheelDiameter, trackWidth, leftMotor, rightMotor, !reverse);
 		
 	}
 
 
 	public void reverse() {
+		leftMotor.resetTachoCount();
+		rightMotor.resetTachoCount();
+
 		pCur = (pFwd == pCur ? pBck : pFwd);
 	}
 
