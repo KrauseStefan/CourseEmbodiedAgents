@@ -22,7 +22,7 @@ public class App {
 		LightSensor lightSensor = new LightSensor(SensorPort.S1); //TODO: Correct port
 		ColorSensor colorSensor = new ColorSensor(SensorPort.S4);
 
-		SolarPanelDetector colorDetector = new SolarPanelDetector(colorSensor);
+//		SolarPanelDetector colorDetector = new SolarPanelDetector(colorSensor);
 		
 //		DifferentialPilot dp = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, leftMotor, rightMotor);
 		ReversibleDifferentialPilot dp = new ReversibleDifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, leftMotor, rightMotor);
@@ -44,9 +44,9 @@ public class App {
 			}
 		});
 		
-//		UtilityScenarios.calibrationProgram(navigator);
+		UtilityScenarios.testReverse(navigator);
 		
-//		program.run();
+		program.run();
 
 	}
 

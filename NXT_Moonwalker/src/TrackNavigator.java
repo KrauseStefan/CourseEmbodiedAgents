@@ -1,5 +1,6 @@
 import lejos.robotics.localization.PoseProvider;
 import lejos.robotics.navigation.Navigator;
+import lejos.robotics.navigation.Pose;
 
 
 public class TrackNavigator extends Navigator {
@@ -25,10 +26,13 @@ public class TrackNavigator extends Navigator {
 	}
 
 	public void rotatePanel(){
-		float heading = getPoseProvider().getPose().getHeading();
-		rotateTo(heading + 180); //overflow is handled gracefully
+		float rotateDeg = 180;
+		Pose pose = getPoseProvider().getPose();
+		rotateTo(pose.getHeading() + rotateDeg); //overflow is handled gracefully
 		waitForStop();
+		
 		getMoveController().reverse();
+		getPoseProvider().setPose(pose);
 				
 		
 	}
