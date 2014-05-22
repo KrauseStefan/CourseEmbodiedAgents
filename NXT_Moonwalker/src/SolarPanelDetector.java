@@ -1,6 +1,6 @@
 import lejos.nxt.ColorSensor;
+import lejos.nxt.ColorSensor.Color;
 import lejos.nxt.LCD;
-import lejos.robotics.Color;
 
 
 public class SolarPanelDetector implements Runnable {
@@ -32,9 +32,10 @@ public class SolarPanelDetector implements Runnable {
 
 	        Color c = cs.getRawColor();
 	        
-			LCD.drawString("B: " +  c.getBlue(), 0, 3);
-			LCD.drawString("G: " +  c.getGreen(), 0, 4);
-			LCD.drawString("R: " +  c.getRed(), 0, 5);
+			LCD.drawString("Off: " +  c.getBackground(), 0, 2);
+			LCD.drawString("B:   " +  c.getBlue(), 0, 3);
+			LCD.drawString("G:   " +  c.getGreen(), 0, 4);
+			LCD.drawString("R:   " +  c.getRed(), 0, 5);
 		}
 		
 	}

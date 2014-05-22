@@ -12,8 +12,8 @@ public class TrackNavigator extends Navigator {
 		return (ReversibleDifferentialPilot) super.getMoveController();
 	}
 	
-	public LineMapPoseProvider getPoseProvider(){
-		return (LineMapPoseProvider) super.getPoseProvider();
+	public GridPoseProvider getPoseProvider(){
+		return (GridPoseProvider) super.getPoseProvider();
 	}
 	
 	public void gridGoTo(int x, int y, float heading){

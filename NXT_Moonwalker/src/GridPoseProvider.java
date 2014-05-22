@@ -6,7 +6,7 @@ import lejos.robotics.navigation.MoveProvider;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 
-public class LineMapPoseProvider extends OdometryPoseProvider implements Runnable {
+public class GridPoseProvider extends OdometryPoseProvider implements Runnable {
 
 //	public final double LINE_SEPERATION = (35.6) /2;
 //	public final double LINE_SEPERATION = (89) /3;
@@ -18,7 +18,6 @@ public class LineMapPoseProvider extends OdometryPoseProvider implements Runnabl
 
 	private Thread self = null;
 	private LightSensor ls = null;
-	private LineMap lm = null;
 	private int white = 0;
 	private int black = 0;
 	private int darkThreshold = (white + black) / 2;
@@ -28,14 +27,13 @@ public class LineMapPoseProvider extends OdometryPoseProvider implements Runnabl
 	
 	private Pose startLocation = new Pose(); // (0 , 1)
 
-	public LineMapPoseProvider(MoveProvider pilot, LightSensor lightSensor, LineMap lineMap, int black, int white) {
+	public GridPoseProvider(MoveProvider pilot, LightSensor lightSensor, int black, int white) {
 		super(pilot);
 		this.black = black;
 		this.white = white;
 		this.darkThreshold = (white + black) / 2;
 		
 		this.ls = lightSensor;
-		this.lm = lineMap;
 		self = new Thread(this);
 		self.start();
 	}

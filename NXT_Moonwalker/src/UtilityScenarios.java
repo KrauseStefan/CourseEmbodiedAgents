@@ -39,8 +39,8 @@ public class UtilityScenarios {
 	}
 
 	static void calibrationProgram(TrackNavigator navigator) {
-		float x = (float) LineMapPoseProvider.LINE_SEPERATION_X;
-		float y = (float) LineMapPoseProvider.LINE_SEPERATION_Y;
+		float x = (float) GridPoseProvider.LINE_SEPERATION_X;
+		float y = (float) GridPoseProvider.LINE_SEPERATION_Y;
 
 		while (true) {
 			squareCounterClock(navigator, x, y);
