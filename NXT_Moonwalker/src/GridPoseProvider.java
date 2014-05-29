@@ -1,38 +1,26 @@
 import lejos.nxt.LCD;
-import lejos.nxt.LightSensor;
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.MoveProvider;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 
 public class GridPoseProvider extends OdometryPoseProvider implements Runnable {
-
-//	public final double LINE_SEPERATION = (35.6) /2;
-//	public final double LINE_SEPERATION = (89) /3;
 	
-	public final float SENSOR_LINE_OFFSET = 6;
+	public final float SENSOR_LINE_OFFSET = (float) 8.5;
 	
 	public static final double LINE_SEPERATION_X = (59.5079 + 59.5318) /4;
 	public static final double LINE_SEPERATION_Y = (58.3235 + 58.2657) /4;
 
 	private Thread self = null;
-	private LightSensor ls = null;
-	private int white = 0;
-	private int black = 0;
-	private int darkThreshold = (white + black) / 2;
-
-	private boolean waitingForBlack = true;
-
+	private BlackWhiteSensor bwsLeft = null;
+	private BlackWhiteSensor bwsRight = null;
 	
 	private Pose startLocation = new Pose(); // (0 , 1)
 
-	public GridPoseProvider(MoveProvider pilot, LightSensor lightSensor, int black, int white) {
+	public GridPoseProvider(MoveProvider pilot, BlackWhiteSensor lightSensorLeft, BlackWhiteSensor lightSensorRight) {
 		super(pilot);
-		this.black = black;
-		this.white = white;
-		this.darkThreshold = (white + black) / 2;
-		
-		this.ls = lightSensor;
+		bwsLeft = lightSensorLeft;
+		bwsRight = lightSensorRight;
 		self = new Thread(this);
 		self.start();
 	}
@@ -69,29 +57,47 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable {
 
 	public void waitForLine() {
 		while (true) {
-			if (!waitingForBlack)
+			if (bwsLeft.wasBlack()) // use a chached value
 				break;
 			Thread.yield();
 		}
 	}
 
+	private void adjustHeading(long diff, boolean adjustLeft){
+		float factor = (float) 0.01;
+		float heading = getPose().getHeading() - (diff * factor);
+		getPose().setHeading( heading);
+		LCD.clear(7);
+		LCD.drawString("Adjust: " + heading, 0, 7);
+		
+	}
+	
 	@Override
 	public void run() {
-		int counter = 0;
+		Long timeBlackSeen = (long) 0;
+		Boolean adjustLeft = false;
+//		LCD.clear(6);
+//		LCD.clear(7);
+//		LCD.drawString("L: ", 0, 6);
+//		LCD.drawString("R: ", 0, 7);		
+		
 		while (true) {
-			int value = ls.getNormalizedLightValue();
-			LCD.clear(6);
-			LCD.drawInt(value, 0, 6);
-			if (ls.getNormalizedLightValue() < darkThreshold) {
-				waitingForBlack = false;
-				counter = 0;
-			} else
-				counter++;
-
-			if (counter > 25) {
-				waitingForBlack = true;
-			}
+			bwsLeft.light();
+			bwsRight.light();
+//			LCD.drawInt(bwsLeft.light(), 3, 3, 6);
+//			LCD.drawInt(bwsRight.light(), 3, 3, 7);
+//			bwsLeft.isBlack();
+//			bwsRight.isBlack();			
+			
+			if(bwsLeft.wasBlack() || bwsRight.wasBlack()){
+				if(bwsLeft.wasBlack() && bwsRight.wasBlack()){
+					adjustHeading(timeBlackSeen - System.nanoTime(), adjustLeft);
+				}else{
+					adjustLeft = bwsRight.wasBlack();
+					timeBlackSeen = timeBlackSeen == 0 ? System.nanoTime() : timeBlackSeen;					
+				}
+			}else
+				timeBlackSeen = (long) 0;
 		}
 	}
-
 }
