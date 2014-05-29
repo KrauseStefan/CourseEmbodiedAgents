@@ -1,9 +1,12 @@
 import lejos.robotics.localization.PoseProvider;
+import lejos.robotics.navigation.NavigationListener;
 import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Pose;
+import lejos.robotics.navigation.Waypoint;
+import lejos.robotics.pathfinding.Path;
 
 
-public class TrackNavigator extends Navigator {
+public class TrackNavigator extends Navigator implements NavigationListener{
 
 	public TrackNavigator(ReversibleDifferentialPilot pilot, PoseProvider poseProvider) {
 		super(pilot, poseProvider);
@@ -33,7 +36,21 @@ public class TrackNavigator extends Navigator {
 		
 		getMoveController().reverse();
 		getPoseProvider().setPose(pose);
-				
+		
+	}
+
+	@Override
+	public void atWaypoint(Waypoint waypoint, Pose pose, int sequence) {
+		
+	}
+
+	@Override
+	public void pathComplete(Waypoint waypoint, Pose pose, int sequence) {
+		
+	}
+
+	@Override
+	public void pathInterrupted(Waypoint waypoint, Pose pose, int sequence) {
 		
 	}
 	

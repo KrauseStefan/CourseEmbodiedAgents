@@ -1,7 +1,5 @@
 import lejos.nxt.*;
 import lejos.robotics.localization.PoseProvider;
-import lejos.robotics.mapping.LineMap;
-import lejos.robotics.navigation.*;
 
 public class App {
 	// CONFIGURATION
@@ -11,7 +9,7 @@ public class App {
 //	final static double TRACK_WIDTH = 17.45; // TODO: use correct values
 //	final static double TRACK_WIDTH = 18.45; // TODO: use correct values
 //	final static double TRACK_WIDTH = 18.00; // TODO: use correct values
-	final static double TRACK_WIDTH = 17.90; // TODO: use correct values
+	final static double TRACK_WIDTH = 18.90; // TODO: use correct values
 	
 	final static int BLACK = 460;
 	final static int WHITE = 670;
@@ -19,8 +17,8 @@ public class App {
 	public static void main(String[] args) throws Exception {
 		NXTRegulatedMotor leftMotor = new NXTRegulatedMotor(MotorPort.A), rightMotor = new NXTRegulatedMotor(MotorPort.B);
 
-		LightSensor lightSensor = new LightSensor(SensorPort.S1); //TODO: Correct port
-		ColorSensor colorSensor = new ColorSensor(SensorPort.S4);
+		LightSensor lightSensor = new LightSensor(SensorPort.S1); 
+//		ColorSensor colorSensor = new ColorSensor(SensorPort.S4);
 
 //		SolarPanelDetector colorDetector = new SolarPanelDetector(colorSensor);
 		
@@ -86,8 +84,8 @@ public class App {
 		
 //		UtilityScenarios.calibrationProgram(navigator);
 		
-		program.run();
 		UtilityScenarios.testReverse(navigator);
+		program.run();
 
 	}
 

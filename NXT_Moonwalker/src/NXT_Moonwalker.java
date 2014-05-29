@@ -39,8 +39,8 @@ public class NXT_Moonwalker{
 		LCD.clear(2);
 		LCD.clear(3);
 		LCD.drawString("#: " + nr, 0, 0);
-		LCD.drawString("x: " + ((p.getX() - pose.getX()) / navigator.getPoseProvider().LINE_SEPERATION_X), 0, 1);
-		LCD.drawString("y: " + ((p.getY() - pose.getY() + 1) / navigator.getPoseProvider().LINE_SEPERATION_Y), 0, 2);
+		LCD.drawString("x: " + ((p.getX() - pose.getX()) / GridPoseProvider.LINE_SEPERATION_X), 0, 1);
+		LCD.drawString("y: " + ((p.getY() - pose.getY() + 1) / GridPoseProvider.LINE_SEPERATION_Y), 0, 2);
 		LCD.drawString("h: " + (p.getHeading() - pose.getHeading()), 0, 3);
 	}
 

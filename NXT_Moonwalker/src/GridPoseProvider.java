@@ -1,7 +1,6 @@
 import lejos.nxt.LCD;
 import lejos.nxt.LightSensor;
 import lejos.robotics.localization.OdometryPoseProvider;
-import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.MoveProvider;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
@@ -69,14 +68,10 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable {
 	}
 
 	public void waitForLine() {
-		try {
-			while (true) {
-				if (!waitingForBlack)
-					break;
-				Thread.sleep(50);
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		while (true) {
+			if (!waitingForBlack)
+				break;
+			Thread.yield();
 		}
 	}
 

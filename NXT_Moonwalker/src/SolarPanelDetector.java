@@ -26,9 +26,9 @@ public class SolarPanelDetector implements Runnable {
 	public void run() {
 		while(true){
 			
-	        String colorNames[] = {"None", "Red", "Green", "Blue", "Yellow",
-                    "Megenta", "Orange", "White", "Black", "Pink",
-                    "Grey", "Light Grey", "Dark Grey", "Cyan"};
+//	        String colorNames[] = {"None", "Red", "Green", "Blue", "Yellow",
+//                    "Megenta", "Orange", "White", "Black", "Pink",
+//                    "Grey", "Light Grey", "Dark Grey", "Cyan"};
 
 	        Color c = cs.getRawColor();
 	        
