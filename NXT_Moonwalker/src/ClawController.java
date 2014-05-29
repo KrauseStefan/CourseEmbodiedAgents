@@ -1,19 +1,53 @@
 import lejos.nxt.*;
 
 public class ClawController {
-
-	boolean running;
-	
+	NXTRegulatedMotor motor;
 	int state = 0;
 	
-	static void TurnClaw(int deg, int speed) {
-		Motor.C.setSpeed(speed);
-		Motor.C.rotate(deg, true);
+	public ClawController(NXTRegulatedMotor m) {
+				
+		motor = m;
+		Button.LEFT.addButtonListener(new ButtonListener() {
+			@Override
+			public void buttonReleased(Button b) {
+			}
+			
+			@Override
+			public void buttonPressed(Button b) {
+				TurnClaw(-20, 70);
+			}
+		});
+		Button.RIGHT.addButtonListener(new ButtonListener() {
+			@Override
+			public void buttonReleased(Button b) {
+			}
+			
+			@Override
+			public void buttonPressed(Button b) {
+				TurnClaw(20,70);
+			}
+		});
+		
+		Button.ENTER.addButtonListener(new ButtonListener() {
+			@Override
+			public void buttonReleased(Button b) {
+			}
+			
+			@Override
+			public void buttonPressed(Button b) {
+				setNextState();
+			}
+		});	
 	}
 	
-	static void TurnClawTo(int deg, int speed){
-		Motor.C.setSpeed(speed);
-		Motor.C.rotateTo(deg);
+	public void TurnClaw(int deg, int speed) {
+		motor.setSpeed(speed);
+		motor.rotate(deg, true);
+	}
+	
+	public void TurnClawTo(int deg, int speed){
+		motor.setSpeed(speed);
+		motor.rotateTo(deg);
 	}
 	
 	public void SetClawTo(int newstate)
@@ -29,32 +63,5 @@ public class ClawController {
 		state++;}
 		else {SetClawTo(0);
 		state=0;}
-		
 	}
-		
-	public void startTurn(boolean up)
-	{
-		running = true;
-		Motor.C.setSpeed(1);
-		if(up)
-		{
-			while(running)
-			{
-				Motor.C.rotate(-1);
-			}
-		}
-		else{
-			while(running)
-			{
-				Motor.C.rotate(1);
-			}
-		}
-	}
-	public void stopTurn()
-	{
-		running = false;
-		}
-
-	
-
 }

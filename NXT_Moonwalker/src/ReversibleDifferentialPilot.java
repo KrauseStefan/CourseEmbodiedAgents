@@ -30,8 +30,8 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 
-		pBck = new DifferentialPilot(wheelDiameter, trackWidth, rightMotor, leftMotor, !reverse);
-		pCur = pFwd = new DifferentialPilot(wheelDiameter, trackWidth, leftMotor, rightMotor, reverse);
+		pBck = 			new DifferentialPilot(wheelDiameter, trackWidth, rightMotor, leftMotor, !reverse);
+		pCur = pFwd = 	new DifferentialPilot(wheelDiameter, trackWidth, leftMotor, rightMotor, reverse);
 
 		pFwd.addMoveListener(this);
 		pBck.addMoveListener(this);

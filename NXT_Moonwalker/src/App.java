@@ -9,7 +9,7 @@ public class App {
 //	final static double TRACK_WIDTH = 17.45; // TODO: use correct values
 //	final static double TRACK_WIDTH = 18.45; // TODO: use correct values
 //	final static double TRACK_WIDTH = 18.00; // TODO: use correct values
-	final static double TRACK_WIDTH = 17.90; // TODO: use correct values
+	final static double TRACK_WIDTH = 18.90; // TODO: use correct values
 	
 	final static int BLACK = 460;
 	final static int WHITE = 670;
@@ -30,7 +30,7 @@ public class App {
 		TrackNavigator navigator = new TrackNavigator(dp, lineMapPoseProvider);
 		NXT_Moonwalker program = new NXT_Moonwalker(navigator);
 		
-		final ClawController cg = new ClawController();
+		final ClawController cg = new ClawController(Motor.C);
 		
 		
 		Button.ESCAPE.addButtonListener(new ButtonListener() {
@@ -41,42 +41,6 @@ public class App {
 			@Override
 			public void buttonPressed(Button b) {
 				System.exit(0);
-			}
-		});
-		
-		Button.LEFT.addButtonListener(new ButtonListener() {
-			@Override
-			public void buttonReleased(Button b) {
-			cg.stopTurn();
-			}
-			
-			@Override
-			public void buttonPressed(Button b) {
-				ClawController.TurnClaw(170, 30);
-				//cg.startTurn(true);
-			}
-		});
-		Button.RIGHT.addButtonListener(new ButtonListener() {
-			@Override
-			public void buttonReleased(Button b) {
-				cg.stopTurn();
-			}
-			
-			@Override
-			public void buttonPressed(Button b) {
-				ClawController.TurnClaw(170,30);
-				//cg.startTurn(false);
-			}
-		});
-		
-		Button.ENTER.addButtonListener(new ButtonListener() {
-			@Override
-			public void buttonReleased(Button b) {
-			}
-			
-			@Override
-			public void buttonPressed(Button b) {
-				cg.setNextState();
 			}
 		});
 		
