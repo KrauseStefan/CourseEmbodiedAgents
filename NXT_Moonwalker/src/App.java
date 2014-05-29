@@ -44,42 +44,6 @@ public class App {
 			}
 		});
 		
-		Button.LEFT.addButtonListener(new ButtonListener() {
-			@Override
-			public void buttonReleased(Button b) {
-			cg.stopTurn();
-			}
-			
-			@Override
-			public void buttonPressed(Button b) {
-				ClawController.TurnClaw(170, 70);
-				//cg.startTurn(true);
-			}
-		});
-		Button.RIGHT.addButtonListener(new ButtonListener() {
-			@Override
-			public void buttonReleased(Button b) {
-				cg.stopTurn();
-			}
-			
-			@Override
-			public void buttonPressed(Button b) {
-				ClawController.TurnClaw(170,70);
-				//cg.startTurn(false);
-			}
-		});
-		
-		Button.ENTER.addButtonListener(new ButtonListener() {
-			@Override
-			public void buttonReleased(Button b) {
-			}
-			
-			@Override
-			public void buttonPressed(Button b) {
-				cg.setNextState();
-			}
-		});
-		
 		
 		
 //		UtilityScenarios.calibrationProgram(navigator);

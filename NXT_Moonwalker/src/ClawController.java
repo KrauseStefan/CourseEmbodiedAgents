@@ -6,6 +6,43 @@ public class ClawController {
 	
 	int state = 0;
 	
+	public ClawController() {
+				
+		Button.LEFT.addButtonListener(new ButtonListener() {
+			@Override
+			public void buttonReleased(Button b) {
+
+			}
+			
+			@Override
+			public void buttonPressed(Button b) {
+				TurnClaw(170, 70);
+			}
+		});
+		Button.RIGHT.addButtonListener(new ButtonListener() {
+			@Override
+			public void buttonReleased(Button b) {
+				stopTurn();
+			}
+			
+			@Override
+			public void buttonPressed(Button b) {
+				ClawController.TurnClaw(170,70);
+			}
+		});
+		
+		Button.ENTER.addButtonListener(new ButtonListener() {
+			@Override
+			public void buttonReleased(Button b) {
+			}
+			
+			@Override
+			public void buttonPressed(Button b) {
+				setNextState();
+			}
+		});	
+	}
+	
 	static void TurnClaw(int deg, int speed) {
 		Motor.C.setSpeed(speed);
 		Motor.C.rotate(deg, true);
