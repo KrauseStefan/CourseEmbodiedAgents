@@ -32,7 +32,7 @@ public class App {
 		TrackNavigator navigator = new TrackNavigator(dp, lineMapPoseProvider);
 		NXT_Moonwalker program = new NXT_Moonwalker(navigator);
 		
-		final ClawController cg = new ClawController();
+		final ClawController cg = new ClawController(Motor.C);
 		
 		
 		Button.ESCAPE.addButtonListener(new ButtonListener() {
