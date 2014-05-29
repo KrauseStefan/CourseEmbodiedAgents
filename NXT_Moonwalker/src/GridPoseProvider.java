@@ -68,14 +68,10 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable {
 	}
 
 	public void waitForLine() {
-		try {
-			while (true) {
-				if (!waitingForBlack)
-					break;
-				Thread.sleep(50);
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		while (true) {
+			if (!waitingForBlack)
+				break;
+			Thread.yield();
 		}
 	}
 

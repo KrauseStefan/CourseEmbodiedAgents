@@ -9,7 +9,7 @@ public class App {
 //	final static double TRACK_WIDTH = 17.45; // TODO: use correct values
 //	final static double TRACK_WIDTH = 18.45; // TODO: use correct values
 //	final static double TRACK_WIDTH = 18.00; // TODO: use correct values
-	final static double TRACK_WIDTH = 17.90; // TODO: use correct values
+	final static double TRACK_WIDTH = 18.90; // TODO: use correct values
 	
 	final static int BLACK = 460;
 	final static int WHITE = 670;
