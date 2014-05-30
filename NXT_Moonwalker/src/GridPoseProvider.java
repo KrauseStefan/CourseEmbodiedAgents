@@ -1,10 +1,13 @@
 import lejos.nxt.LCD;
 import lejos.robotics.localization.OdometryPoseProvider;
+import lejos.robotics.navigation.Move;
+import lejos.robotics.navigation.Move.MoveType;
+import lejos.robotics.navigation.MoveListener;
 import lejos.robotics.navigation.MoveProvider;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 
-public class GridPoseProvider extends OdometryPoseProvider implements Runnable {
+public class GridPoseProvider extends OdometryPoseProvider implements Runnable, MoveListener {
 	
 	public final float SENSOR_LINE_OFFSET = (float) 8.5;
 	
@@ -16,9 +19,14 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable {
 	private BlackWhiteSensor bwsRight = null;
 	
 	private Pose startLocation = new Pose(); // (0 , 1)
+	
+	private boolean isTurning = false;
+	
+	ReversibleDifferentialPilot RDPilot;
 
-	public GridPoseProvider(MoveProvider pilot, BlackWhiteSensor lightSensorLeft, BlackWhiteSensor lightSensorRight) {
+	public GridPoseProvider(ReversibleDifferentialPilot pilot, BlackWhiteSensor lightSensorLeft, BlackWhiteSensor lightSensorRight) {
 		super(pilot);
+		RDPilot = pilot;
 		bwsLeft = lightSensorLeft;
 		bwsRight = lightSensorRight;
 		self = new Thread(this);
@@ -64,18 +72,30 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable {
 	}
 
 	private void adjustHeading(long diff, boolean adjustLeft){
-		float factor = (float) 0.01;
-		float heading = getPose().getHeading() - (diff * factor);
-		getPose().setHeading( heading);
-		LCD.clear(7);
-		LCD.drawString("Adjust: " + heading, 0, 7);
+		double factor = 0.00005;
 		
+		Pose p = getPose();
+		
+		double adjustment = (diff * factor) * (adjustLeft ? 1 : -1);
+		
+		double heading = p.getHeading() - adjustment;
+
+		heading %= 360;
+		p.setHeading( (float) heading);
+		setPose(p);
+		
+		LCD.clear(6);
+		LCD.drawString("diff:   " + diff, 0, 6);		
+		LCD.clear(7);
+		LCD.drawString("Adjust: " + adjustment, 0, 7);		
 	}
 	
 	@Override
 	public void run() {
-		Long timeBlackSeen = (long) 0;
+		Long timeBothBlack = (long) 0;
 		Boolean adjustLeft = false;
+		double normalTravelSpeed = RDPilot.getTravelSpeed();
+		RDPilot.addMoveListener(this);
 //		LCD.clear(6);
 //		LCD.clear(7);
 //		LCD.drawString("L: ", 0, 6);
@@ -83,21 +103,53 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable {
 		
 		while (true) {
 			bwsLeft.light();
-			bwsRight.light();
+			bwsRight.light();			
 //			LCD.drawInt(bwsLeft.light(), 3, 3, 6);
 //			LCD.drawInt(bwsRight.light(), 3, 3, 7);
 //			bwsLeft.isBlack();
 //			bwsRight.isBlack();			
+			Pose p = getPose();
+			if(isTurning){
+				RDPilot.setTravelSpeed(normalTravelSpeed);								
+				continue;
+			}
+
 			
-			if(bwsLeft.wasBlack() || bwsRight.wasBlack()){
-				if(bwsLeft.wasBlack() && bwsRight.wasBlack()){
-					adjustHeading(timeBlackSeen - System.nanoTime(), adjustLeft);
-				}else{
-					adjustLeft = bwsRight.wasBlack();
-					timeBlackSeen = timeBlackSeen == 0 ? System.nanoTime() : timeBlackSeen;					
+			if(bwsLeft.wasBlack() && bwsRight.wasBlack()){
+				timeBothBlack = (timeBothBlack == 0 ? System.currentTimeMillis() : timeBothBlack);
+			}else{
+			}
+
+			if(bwsLeft.wasBlack() || bwsRight.wasBlack()){				
+				if(timeBothBlack > 0){
+					adjustHeading(System.currentTimeMillis() - timeBothBlack, adjustLeft);					
 				}
-			}else
-				timeBlackSeen = (long) 0;
+				
+				adjustLeft = bwsRight.wasBlack();
+				RDPilot.setTravelSpeed(2);
+			}else{
+				RDPilot.setTravelSpeed(normalTravelSpeed);				
+				timeBothBlack = (long) 0;
+			}
+
 		}
 	}
+	
+	@Override
+	public void moveStarted(Move event, MoveProvider mp) {
+		super.moveStarted(event, mp);
+
+		if(event.getMoveType() == MoveType.ROTATE || event.getMoveType() == MoveType.ARC)
+			isTurning = true;
+		else
+			isTurning = false;
+		
+	}
+
+	@Override
+	public void moveStopped(Move event, MoveProvider mp) {
+		super.moveStopped(event, mp);
+				
+	}
+	
 }
