@@ -1,35 +1,48 @@
+
+
 import lejos.nxt.LCD;
 import lejos.robotics.navigation.*;
 
 public class NXT_Moonwalker{
 	final int START_X = 0, START_Y = 0;
 	final float START_HEADIN = 0;
-
-	enum PanelState {
-		Broken,
-		Reversed,
-		Ok
-	}
 	
+	SolarPanelDetector solarPanelDetector = null;
 	TrackNavigator navigator = null;
+	ClawController clawController = null;
 	
-	public NXT_Moonwalker(TrackNavigator n){
-		n.getMoveController().setTravelSpeed(8);
-		navigator = n;
-		
+	public NXT_Moonwalker(TrackNavigator n, SolarPanelDetector spd, ClawController clawController){
+		this.navigator = n;
+		this.solarPanelDetector = spd;		
+		this.clawController = clawController;
 	}
 	
 	public void waitForLine(){
 		
 	}
 		
-	PanelState inspectPanel(){
-		return PanelState.Reversed; //FIXME: Dummy implementation		
+	private void inspectPanel() throws InterruptedException{
+		SolarPanelDetector.SolarPanelStates state =  solarPanelDetector.getState();
+		switch (state) {
+		case REVERSED:
+			navigator.rotatePanel();
+			break;
+		case BROKEN:
+			clawController.setState(ClawController.ClawPositions.LOAD);
+			Pose p = navigator.getPoseProvider().getPose();
+			navigator.goTo(p.getX() + 3, p.getY());
+			navigator.waitForStop();
+			clawController.setState(ClawController.ClawPositions.CARRY);			
+			break;
+		case CORRECT:
+			break;
+		}
+
 	}
 		
-	void printPose(int nr){
-		printPose(nr, new Pose());
-	}
+//	private void printPose(int nr){
+//		printPose(nr, new Pose());
+//	}
 	
 
 	void printPose(int nr, Pose pose){
@@ -52,41 +65,28 @@ public class NXT_Moonwalker{
 //		LCD.clear();
 //		LCD.drawString("" + dist, 1, 1);
 		navigator.getPoseProvider().setPose(new Pose(START_X, START_Y, START_HEADIN));
-		printPose(1);
 		
 		navigator.getMoveController().forward();				
 		navigator.getPoseProvider().waitForLine();
 		navigator.getMoveController().stop();
-		printPose(2);
 
 		navigator.getPoseProvider().setStartToStart();
-		navigator.gridGoTo(0, 1, 0); // first panel
+		navigator.gridGoTo(0, 1, 0); // first intersection (no Panel)
 				
 		navigator.gridGoTo(0, 2, 0);
-//		navigator.gridGoTo(1, 2, 0);
-//		rotatePanel();
-//		navigator.gridGoTo(2, 2, 0);
-//		rotatePanel();
+		navigator.gridGoTo(1, 2, 0);
+		
+		navigator.waitForStop();
+		inspectPanel();
+		navigator.gridGoTo(2, 2, 0);
+
+		navigator.waitForStop();
+		inspectPanel();
 		navigator.gridGoTo(3, 2, 0);
-//		navigator.rotatePanel();
-//		while(navigator.isMoving()){
-//			Thread.sleep(50);
-//			printPose(3, navigator.getPoseProvider().getStartToStart());					
-//		}
-////		navigator.waitForStop();
-//		
-//		printPose(4);		
-//		if(inspectPanel() == PanelState.Reversed)
-//			rotatePanel();
-//
-//		printPose(5);		
-//		gridGoTo(1, 2);
-//		
-//		if(inspectPanel() == PanelState.Reversed)
-//			rotatePanel();
-//
-//		printPose(6);
-//		
+		
+		navigator.waitForStop();
+		inspectPanel();
+
 		while(true){
 			
 		}

@@ -20,19 +20,20 @@ public class App {
 
 		BlackWhiteSensor bwsLeft = new BlackWhiteSensor(new LightSensor(SensorPort.S1), LEFT_BLACK, LEFT_WHITE);
 		BlackWhiteSensor bwsRight = new BlackWhiteSensor(new LightSensor(SensorPort.S2), RIGHT_BLACK, RIGHT_WHITE);
+		ColorSensor colorSensor = new ColorSensor(SensorPort.S4);
 		 
-//		ColorSensor colorSensor = new ColorSensor(SensorPort.S4);
-
-//		SolarPanelDetector colorDetector = new SolarPanelDetector(colorSensor);
+		SolarPanelDetector solarPanelDetector = new SolarPanelDetector(colorSensor);
 		
 		ReversibleDifferentialPilot dp = new ReversibleDifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, leftMotor, rightMotor);
+		dp.setTravelSpeed(8);
+
 		PoseProvider lineMapPoseProvider = new GridPoseProvider(dp, bwsLeft, bwsRight);
+		ClawController clawController = new ClawController(Motor.C);
 				
-		dp.setAcceleration((int) (1.6 * dp.getMaxTravelSpeed()));
+		dp.setAcceleration((int) (dp.getMaxTravelSpeed()));
 		TrackNavigator navigator = new TrackNavigator(dp, lineMapPoseProvider);
-		NXT_Moonwalker program = new NXT_Moonwalker(navigator);
+		NXT_Moonwalker program = new NXT_Moonwalker(navigator, solarPanelDetector, clawController);
 		
-		final ClawController cg = new ClawController(Motor.C);
 		
 		
 		Button.ESCAPE.addButtonListener(new ButtonListener() {
@@ -47,10 +48,10 @@ public class App {
 		});
 		
 		
-		
 //		UtilityScenarios.calibrationProgram(navigator);
 		
 //		UtilityScenarios.testReverse(navigator);
+//		UtilityScenarios.driveLineBackAndForth(navigator);
 		program.run();
 
 	}
