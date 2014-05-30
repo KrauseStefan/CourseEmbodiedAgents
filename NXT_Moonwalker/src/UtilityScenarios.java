@@ -42,6 +42,11 @@ public class UtilityScenarios {
 		float x = (float) GridPoseProvider.LINE_SEPERATION_X;
 		float y = (float) GridPoseProvider.LINE_SEPERATION_Y;
 
+		Pose p = navigator.getPoseProvider().getPose();
+		p.setHeading(90);
+		navigator.getPoseProvider().setPose(p);
+		
+		
 		while (true) {
 			squareCounterClock(navigator, x, y);
 //			squareClock(navigator, x, y);
@@ -95,6 +100,27 @@ public class UtilityScenarios {
 		navigator.addWaypoint(-x, y);
 		navigator.addWaypoint(-x, 0);
 		navigator.addWaypoint(0, 0);
+
+	}
+
+	static void driveLineBackAndForth(TrackNavigator navigator) {
+		float x = (float) GridPoseProvider.LINE_SEPERATION_X;
+		float y = (float) GridPoseProvider.LINE_SEPERATION_Y;
+		
+		navigator.getPoseProvider().setPose(new Pose(0,0, 0));
+		
+		while(true){
+			navigator.addWaypoint(1* x, 0*y);
+			navigator.addWaypoint(2* x, 0*y);
+			navigator.addWaypoint(3* x, 0*y);
+			navigator.addWaypoint(2* x, 0*y);
+			navigator.addWaypoint(1* x, 0*y);
+			navigator.addWaypoint(0* x, 0*y);
+
+						
+			navigator.followPath();
+			navigator.waitForStop();
+		}
 
 	}
 
