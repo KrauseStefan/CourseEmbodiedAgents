@@ -7,13 +7,13 @@ public class SolarPanelDetector implements Runnable {
 	ColorSensor cs = null;
 	Thread t = null;
 	Color c = null;
-	public enum SolarPanelStates { CORRECT, WRONG, BROKEN }
+	public enum SolarPanelStates { CORRECT, REVERSED, BROKEN }
 
 	public SolarPanelDetector(ColorSensor sensor) {
 		cs = sensor;
 		cs.setFloodlight(Color.WHITE);
-		t = new Thread(this);
-		t.start();
+//		t = new Thread(this);
+//		t.start();
 	}
 	
 	
@@ -21,14 +21,14 @@ public class SolarPanelDetector implements Runnable {
 		
 		c = cs.getColor();
 				
-	    LCD.drawString(Integer.toString(c.getColor()), 0, 2);
+//	    LCD.drawString(Integer.toString(c.getColor()), 0, 2);
 		
 	    if(c.getColor() == Color.BLACK)
 	    	return SolarPanelStates.BROKEN;
 	    else if(c.getColor() == Color.RED)
 	    	return SolarPanelStates.CORRECT;
 	    else if (c.getColor() == Color.BLUE)
-	    	return SolarPanelStates.WRONG;
+	    	return SolarPanelStates.REVERSED;
 	    else 
 	    	return SolarPanelStates.CORRECT;
 	}
