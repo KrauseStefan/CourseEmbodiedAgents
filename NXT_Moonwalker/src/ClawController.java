@@ -51,7 +51,7 @@ public class ClawController {
 	public void CalibrateClaw() throws InterruptedException
 	{
 		motor.setSpeed(100);
-		motor.rotate(-180, true);
+		motor.rotate(-270, true);
 		while(motor.isMoving()){}
 		//Thread.sleep(1000);
 		motor.stop(true);

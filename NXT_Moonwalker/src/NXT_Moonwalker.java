@@ -30,9 +30,17 @@ public class NXT_Moonwalker{
 		case BROKEN:
 			clawController.setState(ClawController.ClawPositions.LOAD);
 			Pose p = navigator.getPoseProvider().getPose();
-			navigator.goTo(p.getX() + 3, p.getY());
-			navigator.waitForStop();
-			clawController.setState(ClawController.ClawPositions.CARRY);			
+			if(navigator.getMoveController().GetDirectionForward())
+			{
+				navigator.goTo(p.getX() + 10, p.getY());
+			}
+			else{
+				navigator.goTo(p.getX() - 15, p.getY());
+			}
+				navigator.waitForStop();
+				clawController.setState(ClawController.ClawPositions.CARRY);	
+
+		
 			break;
 		case CORRECT:
 			break;

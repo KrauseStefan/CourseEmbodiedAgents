@@ -18,6 +18,8 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 	RegulatedMotor rightMotor;
 
 	LinkedList<MoveListener> moveListeners = new LinkedList<MoveListener>();
+	
+
 
 	public ReversibleDifferentialPilot(final double wheelDiameter, final double trackWidth, final RegulatedMotor leftMotor,
 			final RegulatedMotor rightMotor) {
@@ -53,6 +55,12 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 	public void setAcceleration(int acceleration) {
 		pFwd.setAcceleration(acceleration);
 		pBck.setAcceleration(acceleration);
+	}
+	
+	public Boolean GetDirectionForward()
+	{
+		if(pFwd==pCur){return true;}
+		else {return false;}
 	}
 
 	@Override
