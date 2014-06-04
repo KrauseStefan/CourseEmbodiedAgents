@@ -1,3 +1,4 @@
+import lejos.nxt.LCD;
 import lejos.robotics.navigation.Pose;
 
 public class UtilityScenarios {
@@ -122,5 +123,16 @@ public class UtilityScenarios {
 			navigator.waitForStop();
 		}
 
+	}
+	
+	static void testBWLightSensor(BlackWhiteSensor sensor) throws InterruptedException
+	{
+		while(true)
+		{
+			LCD.clear();
+			LCD.drawInt(sensor.light(), 0, 0);
+			Thread.sleep(50);
+		}
+		
 	}
 }

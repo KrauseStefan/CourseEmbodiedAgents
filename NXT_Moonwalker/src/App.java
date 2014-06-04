@@ -14,12 +14,16 @@ public class App {
 	final static int RIGHT_BLACK = 404;
 	final static int RIGHT_WHITE = 615;
 	
+	final static int CENTER_BLACK = 404;
+	final static int CENTER_WHITE = 615;
+	
 	public static void main(String[] args) throws Exception {
 		NXTRegulatedMotor leftMotor = new NXTRegulatedMotor(MotorPort.A), rightMotor = new NXTRegulatedMotor(MotorPort.B);
 
 
 		BlackWhiteSensor bwsLeft = new BlackWhiteSensor(new LightSensor(SensorPort.S1), LEFT_BLACK, LEFT_WHITE);
 		BlackWhiteSensor bwsRight = new BlackWhiteSensor(new LightSensor(SensorPort.S2), RIGHT_BLACK, RIGHT_WHITE);
+		BlackWhiteSensor btwCenter = new BlackWhiteSensor(new LightSensor(SensorPort.S3), CENTER_BLACK, CENTER_WHITE);
 		ColorSensor colorSensor = new ColorSensor(SensorPort.S4);
 		 
 		SolarPanelDetector solarPanelDetector = new SolarPanelDetector(colorSensor);
@@ -52,7 +56,8 @@ public class App {
 		
 //		UtilityScenarios.testReverse(navigator);
 //		UtilityScenarios.driveLineBackAndForth(navigator);
-		program.run();
+		UtilityScenarios.testBWLightSensor(btwCenter);
+		//program.run();
 		//while(true){}
 
 	}
