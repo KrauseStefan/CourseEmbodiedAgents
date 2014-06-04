@@ -53,6 +53,7 @@ public class App {
 //		UtilityScenarios.testReverse(navigator);
 //		UtilityScenarios.driveLineBackAndForth(navigator);
 		program.run();
+		//while(true){}
 
 	}
 

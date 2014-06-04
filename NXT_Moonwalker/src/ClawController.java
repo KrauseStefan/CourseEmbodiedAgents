@@ -3,6 +3,7 @@ import lejos.nxt.*;
 public class ClawController {
 	private NXTRegulatedMotor motor;
 	private ClawPositions state = ClawPositions.RELEASE;
+	private int offset;
 	
 	public enum ClawPositions {
 		RELEASE, //0 
@@ -10,7 +11,7 @@ public class ClawController {
 		CARRY //2
 	};
 
-	public ClawController(NXTRegulatedMotor m) {
+	public ClawController(NXTRegulatedMotor m) throws InterruptedException {
 
 		motor = m;
 		Button.LEFT.addButtonListener(new ButtonListener() {
@@ -44,6 +45,19 @@ public class ClawController {
 				setNextState();
 			}
 		});
+		CalibrateClaw();
+	}
+	
+	public void CalibrateClaw() throws InterruptedException
+	{
+		motor.setSpeed(100);
+		motor.rotate(-180, true);
+		while(motor.isMoving()){}
+		//Thread.sleep(1000);
+		motor.stop(true);
+		offset = motor.getPosition();
+		offset += 55;
+		TurnClawTo(0, 40);
 	}
 
 	public void TurnClaw(int deg, int speed) {
@@ -53,7 +67,7 @@ public class ClawController {
 
 	public void TurnClawTo(int deg, int speed) {
 		motor.setSpeed(speed);
-		motor.rotateTo(deg);
+		motor.rotateTo(deg+offset);
 	}
 
 	public void setState(ClawPositions newstate) {

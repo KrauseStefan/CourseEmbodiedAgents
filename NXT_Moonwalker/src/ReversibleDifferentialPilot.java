@@ -17,7 +17,7 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 	RegulatedMotor leftMotor;
 	RegulatedMotor rightMotor;
 
-	LinkedList<MoveListener> moveListeners = new LinkedList<>();
+	LinkedList<MoveListener> moveListeners = new LinkedList<MoveListener>();
 
 	public ReversibleDifferentialPilot(final double wheelDiameter, final double trackWidth, final RegulatedMotor leftMotor,
 			final RegulatedMotor rightMotor) {
