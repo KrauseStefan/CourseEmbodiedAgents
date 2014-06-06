@@ -30,7 +30,7 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		bwsLeft = lightSensorLeft;
 		bwsRight = lightSensorRight;
 		self = new Thread(this);
-		self.start();
+		//self.start();
 	}
 
 	@Override

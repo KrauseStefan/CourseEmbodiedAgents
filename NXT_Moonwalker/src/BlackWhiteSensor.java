@@ -44,7 +44,7 @@ public class BlackWhiteSensor {
 		LCD.drawString("to callibrate", 0, 1);
 		LCD.drawString(color, 0, 2);
 		while (!Button.ENTER.isPressed()) {
-			lightValue = ls.readValue();
+			lightValue = light();
 			LCD.drawInt(lightValue, 4, 10, 2);
 			LCD.refresh();
 		}
