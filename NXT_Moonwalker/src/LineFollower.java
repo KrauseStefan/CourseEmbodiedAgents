@@ -12,9 +12,10 @@ public class LineFollower implements Runnable{
 		this.sensor = _sensor;
 		this.isStarted = false;
 		this.pilot = _pilot;
-
-		sensor.calibrate();
-
+	}
+	
+	public void calibrate(){
+		sensor.calibrate();		
 	}
 	
 	@Override

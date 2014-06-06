@@ -73,16 +73,15 @@ public class NXT_Moonwalker{
 	
 	public void run() throws Exception{
 		LCD.drawString("Start" + 0, 0, 7);
-//		double dist = UtilityScenarios.mesureLineDistance(navigator);
-//		
+
 		LCD.clear();
-//		LCD.drawString("" + dist, 1, 1);
+		lineFol.calibrate();
 		lineFollowerThread.start();
 
 //		navigator.getMoveController().forward();				
 		LCD.clear(7);
 		LCD.drawString("Follow Line", 0, 7);
-		navigator.getPoseProvider().waitForLine();		
+		navigator.getPoseProvider().waitForLine();
 //		navigator.getMoveController().stop();
 		lineFol.stop();
 		
