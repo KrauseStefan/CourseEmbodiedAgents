@@ -39,6 +39,7 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 		pBck.addMoveListener(this);
 
 	}
+	
 
 	public void reverse() {
 		leftMotor.resetTachoCount();
@@ -114,6 +115,15 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 	public void forward() {
 		pCur.forward();
 
+	}
+	
+
+	public void forward(int leftPower, int rightPower) {
+		this.leftMotor.setSpeed(leftPower);
+		this.rightMotor.setSpeed(rightPower);
+		
+		this.leftMotor.forward();
+		this.rightMotor.forward();
 	}
 
 	@Override
