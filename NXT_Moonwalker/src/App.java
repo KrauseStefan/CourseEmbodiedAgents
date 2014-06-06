@@ -56,8 +56,8 @@ public class App {
 		
 //		UtilityScenarios.testReverse(navigator);
 //		UtilityScenarios.driveLineBackAndForth(navigator);
-		UtilityScenarios.testBWLightSensor(btwCenter);
-		//program.run();
+		//UtilityScenarios.testBWLightSensor(btwCenter);
+		program.run();
 		//while(true){}
 
 	}
