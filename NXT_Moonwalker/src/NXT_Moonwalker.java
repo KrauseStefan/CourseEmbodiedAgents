@@ -10,11 +10,13 @@ public class NXT_Moonwalker{
 	SolarPanelDetector solarPanelDetector = null;
 	TrackNavigator navigator = null;
 	ClawController clawController = null;
+	LineFollower lineFol = null;
 	
-	public NXT_Moonwalker(TrackNavigator n, SolarPanelDetector spd, ClawController clawController){
+	public NXT_Moonwalker(TrackNavigator n, SolarPanelDetector spd, ClawController clawController, LineFollower _lineFol){
 		this.navigator = n;
 		this.solarPanelDetector = spd;		
 		this.clawController = clawController;
+		this.lineFol = _lineFol;
 	}
 	
 	public void waitForLine(){
@@ -72,6 +74,8 @@ public class NXT_Moonwalker{
 //		
 //		LCD.clear();
 //		LCD.drawString("" + dist, 1, 1);
+		lineFol.start();
+		/*
 		navigator.getPoseProvider().setPose(new Pose(START_X, START_Y, START_HEADIN));
 		
 		navigator.getMoveController().forward();				
@@ -98,7 +102,7 @@ public class NXT_Moonwalker{
 		navigator.gridGoTo(3, 2, 0);
 		
 		navigator.waitForStop();
-		inspectPanel();
+		inspectPanel();*/
 
 		while(true){
 			
