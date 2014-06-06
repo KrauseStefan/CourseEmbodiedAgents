@@ -43,11 +43,11 @@ public class LineFollower {
 			 
 			 //powerLeft = power+powerDiff;
 			 //powerRight = power-powerDiff;
-			 
+			 /*
 			 if(powerDiff > 10)
 				 powerDiff = 10;
 			 else if (powerDiff < -10)
-				 powerDiff = -10;
+				 powerDiff = -10;*/
 			 
 			 LCD.drawInt(sensorVal,4,10,2);
 			 LCD.drawInt(powerDiff, 4, 10, 4);
@@ -60,7 +60,7 @@ public class LineFollower {
 		    //	 pilot.forward(power+powerDiff,power+powerDiff);
 		     
 		     
-		     //Thread.sleep(10);
+		     Thread.sleep(30);
 	     }
 	     
 	     //Car.stop();
