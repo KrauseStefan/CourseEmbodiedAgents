@@ -52,8 +52,8 @@ public class BlackWhiteSensor {
 	}
 
 	public void calibrate() {
-		blackLightValue = read("black");
 		whiteLightValue = read("white");
+		blackLightValue = read("black");
 		// The threshold is calculated as the median between
 		// the two readings over the two types of surfaces
 		blackWhiteThreshold = (blackLightValue + whiteLightValue) / 2;
