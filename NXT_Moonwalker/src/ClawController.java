@@ -59,10 +59,8 @@ public class ClawController {
 				while(motor.isMoving()){try {
 					Thread.sleep(20);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}}
-				//Thread.sleep(1000);
 				motor.stop(true);
 				offset = motor.getPosition();
 				offset += 20;
