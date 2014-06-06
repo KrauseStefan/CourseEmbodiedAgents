@@ -75,13 +75,18 @@ public class NXT_Moonwalker{
 		navigator.getPoseProvider().setPose(new Pose(START_X, START_Y, START_HEADIN));
 		
 		navigator.getMoveController().forward();				
-		navigator.getPoseProvider().waitForLine();
-		navigator.getMoveController().stop();
-
+		navigator.getPoseProvider().waitForLine();		
+		navigator.getMoveController().stop();				
+		
 		navigator.getPoseProvider().setStartToStart();
 		navigator.gridGoTo(0, 1, 0); // first intersection (no Panel)
 				
 		navigator.gridGoTo(0, 2, 0);
+		
+		navigator.waitForStop();
+		
+		navigator.getPoseProvider().calibrateHeading();
+		
 		navigator.gridGoTo(1, 2, 0);
 		
 		navigator.waitForStop();

@@ -10,17 +10,15 @@ import lejos.robotics.navigation.MoveProvider;
 
 public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcRotateMoveController, MoveListener {
 
-	DifferentialPilot pFwd;
-	DifferentialPilot pBck;
-	DifferentialPilot pCur;
-
-	RegulatedMotor leftMotor;
-	RegulatedMotor rightMotor;
-
-	LinkedList<MoveListener> moveListeners = new LinkedList<MoveListener>();
+	private double trackWidth, wheelDiameter;
 	
+	private DifferentialPilot pFwd, pBck, pCur;
 
+	private RegulatedMotor leftMotor;
+	private RegulatedMotor rightMotor;
 
+	private LinkedList<MoveListener> moveListeners = new LinkedList<MoveListener>();
+	
 	public ReversibleDifferentialPilot(final double wheelDiameter, final double trackWidth, final RegulatedMotor leftMotor,
 			final RegulatedMotor rightMotor) {
 		this(wheelDiameter, trackWidth, leftMotor, rightMotor, false);
@@ -38,9 +36,20 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 		pFwd.addMoveListener(this);
 		pBck.addMoveListener(this);
 
+		this.trackWidth = trackWidth;
+		this.wheelDiameter = wheelDiameter;
 	}
 	
+	public double getTrackWidth(){
+		return trackWidth;
+		
+	}
 
+	public double getWheelDiameter(){
+		return wheelDiameter;		
+	}
+
+	
 	public void reverse() {
 		leftMotor.resetTachoCount();
 		rightMotor.resetTachoCount();
@@ -117,7 +126,6 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 
 	}
 	
-
 	public void forward(int leftPower, int rightPower) {
 		this.leftMotor.setSpeed(leftPower);
 		this.rightMotor.setSpeed(rightPower);
@@ -132,6 +140,15 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 
 	}
 
+	public void backward(int leftPower, int rightPower) {
+		this.leftMotor.setSpeed(leftPower);
+		this.rightMotor.setSpeed(rightPower);
+		
+		this.leftMotor.backward();
+		this.rightMotor.backward();
+	}
+
+	
 	@Override
 	public void stop() {
 		pCur.stop();
@@ -244,4 +261,5 @@ public class ReversibleDifferentialPilot implements RegulatedMotorListener, ArcR
 		}
 
 	}
+
 }

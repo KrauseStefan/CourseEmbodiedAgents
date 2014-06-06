@@ -50,14 +50,28 @@ public class ClawController {
 	
 	public void CalibrateClaw() throws InterruptedException
 	{
-		motor.setSpeed(100);
-		motor.rotate(-270, true);
-		while(motor.isMoving()){}
-		//Thread.sleep(1000);
-		motor.stop(true);
-		offset = motor.getPosition();
-		offset += 55;
-		TurnClawTo(0, 40);
+		Runnable runnable =  new Runnable() {
+			
+			@Override
+			public void run() {
+				motor.setSpeed(100);
+				motor.rotate(-270, true);
+				while(motor.isMoving()){try {
+					Thread.sleep(20);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}}
+				//Thread.sleep(1000);
+				motor.stop(true);
+				offset = motor.getPosition();
+				offset += 20;
+				TurnClawTo(0, 40);				
+			}
+		};
+		Thread t = new Thread(runnable);
+		t.start();
+		
 	}
 
 	public void TurnClaw(int deg, int speed) {

@@ -67,20 +67,24 @@ public class BlackWhiteSensor {
 		blackWhiteThreshold = (blackLightValue + whiteLightValue) / 2;
 	}
 
+	public int getBlackWhiteThreshold(){
+		return blackWhiteThreshold;
+	}
+	
 	public boolean wasBlack() {
 		synchronized (this) {
-			return (lastValue < blackWhiteThreshold);
+			return (lastValue < getBlackWhiteThreshold());
 		}
 	}
 
 	public boolean wasWhite() {
 		synchronized (this) {
-			return (lastValue < blackWhiteThreshold);
+			return (lastValue < getBlackWhiteThreshold());
 		}
 	}
 
 	public boolean isBlack() {
-		return (light() < blackWhiteThreshold);
+		return (light() < getBlackWhiteThreshold());
 	}
 
 	public boolean isWhite() {
