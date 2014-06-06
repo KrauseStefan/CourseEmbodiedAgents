@@ -56,7 +56,7 @@ public class ClawController {
 		//Thread.sleep(1000);
 		motor.stop(true);
 		offset = motor.getPosition();
-		offset += 55;
+		offset += 30;
 		TurnClawTo(0, 40);
 	}
 

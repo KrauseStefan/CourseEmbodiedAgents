@@ -25,9 +25,6 @@ public class PIDLineFollower {
 				 
 			     while (! Button.ESCAPE.isDown())
 			     {
-			    	 
-				     
-				     
 				     sensorVal = sensor.light();
 				     
 					 error = sensorVal - sensor.blackWhiteThreshold;

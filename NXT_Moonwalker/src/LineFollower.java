@@ -18,12 +18,12 @@ public class LineFollower {
 	
 	public void start() throws Exception {
 		 this.isStarted = true;
-	     final int power = 50;
+	     final int power = 300;
 		 final float Kp = 1.8f, Ki = 0, Kd = 0;
 		 float error, derivative, previous_error = 0, integral = 0, dt = 300;
 		 int sensorVal, powerDiff; 
 		 int powerLeft, powerRight;
-		 			 
+		 			 	
 	     sensor.calibrate();
 		 
 	     LCD.clear();
@@ -44,15 +44,20 @@ public class LineFollower {
 			 //powerLeft = power+powerDiff;
 			 //powerRight = power-powerDiff;
 			 
+			 if(powerDiff > 10)
+				 powerDiff = 10;
+			 else if (powerDiff < -10)
+				 powerDiff = -10;
+			 
 			 LCD.drawInt(sensorVal,4,10,2);
 			 LCD.drawInt(powerDiff, 4, 10, 4);
 			 //LCD.drawInt(powerRight,4,10,5);
 			 
 			 LCD.refresh();
-			 if ( sensor.wasBlack() )
-		         pilot.forward(power-powerDiff, 0);
-		     else
-		    	 pilot.forward(0,power+powerDiff);
+			// if ( sensor.isBlack() )
+		         pilot.forward(power-powerDiff, power+powerDiff);
+		    // else
+		    //	 pilot.forward(power+powerDiff,power+powerDiff);
 		     
 		     
 		     //Thread.sleep(10);

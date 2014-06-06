@@ -30,13 +30,14 @@ public class App {
 		
 		ReversibleDifferentialPilot dp = new ReversibleDifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, leftMotor, rightMotor);
 		dp.setTravelSpeed(8);
+		LineFollower lineFol = new LineFollower(btwCenter, dp);
 
 		PoseProvider lineMapPoseProvider = new GridPoseProvider(dp, bwsLeft, bwsRight);
 		ClawController clawController = new ClawController(Motor.C);
 				
 		dp.setAcceleration((int) (dp.getMaxTravelSpeed()));
 		TrackNavigator navigator = new TrackNavigator(dp, lineMapPoseProvider);
-		NXT_Moonwalker program = new NXT_Moonwalker(navigator, solarPanelDetector, clawController);
+		NXT_Moonwalker program = new NXT_Moonwalker(navigator, solarPanelDetector, clawController, lineFol);
 		
 		
 		
@@ -56,7 +57,9 @@ public class App {
 		
 //		UtilityScenarios.testReverse(navigator);
 //		UtilityScenarios.driveLineBackAndForth(navigator);
+
 		//UtilityScenarios.testBWLightSensor(btwCenter);
+//		UtilityScenarios.testBWLightSensor(btwCenter);
 		program.run();
 		//while(true){}
 
