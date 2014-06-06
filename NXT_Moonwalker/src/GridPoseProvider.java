@@ -30,7 +30,7 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		bwsLeft = lightSensorLeft;
 		bwsRight = lightSensorRight;
 		self = new Thread(this);
-		//self.start();
+		self.start();
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 
 	public void waitForLine() {
 		while (true) {
-			if (bwsLeft.wasBlack()) // use a chached value
+			if (bwsLeft.wasBlack()) // use a cached value
 				break;
 			Thread.yield();
 		}
@@ -133,25 +133,6 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		pilot.setTravelSpeed(normalTravelSpeed);
 
 	}	
-
-//	private void adjustHeading(long diff, boolean adjustLeft){
-//		double factor = 0.00005;
-//		
-//		Pose p = getPose();
-//		
-//		double adjustment = (diff * factor) * (adjustLeft ? 1 : -1);
-//		
-//		double heading = p.getHeading() - adjustment;
-//
-//		heading %= 360;
-//		p.setHeading( (float) heading);
-//		setPose(p);
-//		
-//		LCD.clear(6);
-//		LCD.drawString("diff:   " + diff, 0, 6);		
-//		LCD.clear(7);
-//		LCD.drawString("Adjust: " + adjustment, 0, 7);		
-//	}
 	
 	@Override
 	public void run() {
@@ -175,32 +156,11 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 			}
 //			LCD.drawInt(bwsLeft.light(), 3, 3, 6);
 //			LCD.drawInt(bwsRight.light(), 3, 3, 7);
-//			bwsLeft.isBlack();
-//			bwsRight.isBlack();
 			
-//			Pose p = getPose();
-//			if(isTurning){
-//				RDPilot.setTravelSpeed(normalTravelSpeed);								
-//				continue;
-//			}
-//
-//			
-//			if(bwsLeft.wasBlack() && bwsRight.wasBlack()){
-//				timeBothBlack = (timeBothBlack == 0 ? System.currentTimeMillis() : timeBothBlack);
-//			}else{
-//			}
-//
-//			if(bwsLeft.wasBlack() || bwsRight.wasBlack()){				
-//				if(timeBothBlack > 0){
-//					adjustHeading(System.currentTimeMillis() - timeBothBlack, adjustLeft);					
-//				}
-//				
-//				adjustLeft = bwsRight.wasBlack();
-//				RDPilot.setTravelSpeed(2);
-//			}else{
-//				RDPilot.setTravelSpeed(normalTravelSpeed);				
-//				timeBothBlack = (long) 0;
-//			}
+			if(isTurning){
+				pilot.setTravelSpeed(normalTravelSpeed);								
+				continue;
+			}
 
 		}
 	}
