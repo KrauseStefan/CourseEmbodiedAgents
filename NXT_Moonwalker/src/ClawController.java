@@ -49,7 +49,7 @@ public class ClawController {
 	}
 	
 	public void CalibrateClaw() throws InterruptedException
-	{
+	{		
 		Runnable runnable =  new Runnable() {
 			
 			@Override
@@ -70,6 +70,7 @@ public class ClawController {
 		Thread t = new Thread(runnable);
 		t.start();
 		
+
 	}
 
 	public void TurnClaw(int deg, int speed) {

@@ -1,7 +1,6 @@
 import java.io.IOException;
 
-import lejos.nxt.comm.Bluetooth;
-import lejos.nxt.comm.NXTConnection;
+import lejos.nxt.LCD;
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.Move;
 import lejos.robotics.navigation.Move.MoveType;
@@ -9,9 +8,6 @@ import lejos.robotics.navigation.MoveListener;
 import lejos.robotics.navigation.MoveProvider;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
-import lejos.util.Datalogger;
-import lejos.util.Logger;
-import lejos.util.NXTDataLogger;
 import lejos.util.PIDController;
 
 public class GridPoseProvider extends OdometryPoseProvider implements Runnable, MoveListener {
@@ -28,6 +24,14 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 	private Pose startLocation = new Pose(); // (0 , 1)
 	
 	private boolean isTurning = false;
+	private boolean allowAutoCalibration = false;
+	
+	public enum Direction {
+		NORTH, //0 
+		WEST, //1
+		SOUTH, //2
+		EAST //3
+	};
 	
 	ReversibleDifferentialPilot pilot;
 
@@ -50,7 +54,7 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		super.setPose(aPose);
 	}
 
-	public void setStartToStart() {		
+	public void setStartToStart() {
 		startLocation = new Pose((getPose().getX() + SENSOR_LINE_OFFSET), getPose().getY(), 0);
 	}
 
@@ -72,10 +76,15 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 
 	public void waitForLine() {
 		while (true) {
-			if (bwsLeft.wasBlack()) // use a cached value
+			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack())) // use a cached value
 				break;
 			Thread.yield();
 		}
+	}
+	
+	public void setAutoCalibrate(boolean AC)
+	{
+		allowAutoCalibration = AC;
 	}
 	
 	public void calibrateHeading() throws IOException{
@@ -84,7 +93,7 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		
 		double normalTravelSpeed = pilot.getTravelSpeed();
 		pilot.setTravelSpeed(1);
-
+		
 		
 		PIDController pidCalibratorLeft  = new PIDController(bwsLeft .getBlackWhiteThreshold(), 0); // setPoint, sleepDelay
 		PIDController pidCalibratorRight = new PIDController(bwsRight.getBlackWhiteThreshold(), ms_delay); // setPoint, sleepDelay
@@ -153,14 +162,12 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 	
 	@Override
 	public void run() {
-		Long timeBothBlack = (long) 0;
-		Boolean adjustLeft = false;
 		double normalTravelSpeed = pilot.getTravelSpeed();
 		pilot.addMoveListener(this);
-//		LCD.clear(6);
-//		LCD.clear(7);
-//		LCD.drawString("L: ", 0, 6);
-//		LCD.drawString("R: ", 0, 7);		
+		LCD.clear(6);
+		LCD.clear(7);
+		LCD.drawString("L: ", 0, 6);
+		LCD.drawString("R: ", 0, 7);	
 		
 		while (true) {
 			bwsLeft.light();
@@ -171,14 +178,75 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			LCD.drawInt(bwsLeft.light(), 3, 3, 6);
-//			LCD.drawInt(bwsRight.light(), 3, 3, 7);
+			LCD.drawInt(bwsLeft.light(), 3, 3, 6);
+			LCD.drawInt(bwsRight.light(), 3, 3, 7);
 			
 			if(isTurning){
 				pilot.setTravelSpeed(normalTravelSpeed);								
 				continue;
 			}
+			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack()) && allowAutoCalibration) // use a cached value
+			{
+				Pose pose = getPose();
+				if(getDirection(pose.getHeading()) == Direction.NORTH)
+				{
+					if(pilot.GetDirectionForward())
+					{
+						pose.setLocation((Math.round(pose.getX())) - SENSOR_LINE_OFFSET, Math.round(pose.getY()));
+					}
+					else
+					{
+						pose.setLocation((Math.round(pose.getX())) + SENSOR_LINE_OFFSET, Math.round(pose.getY()));
+					}
+				}
+				else if(getDirection(pose.getHeading()) == Direction.WEST)
+				{
+					if(pilot.GetDirectionForward())
+					{
+						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) - SENSOR_LINE_OFFSET);
+					}
+					else
+					{
+						pose.setLocation(Math.round(pose.getX()), Math.round(pose.getY()) + SENSOR_LINE_OFFSET);
+					}
+				}
+				else if(getDirection(pose.getHeading()) == Direction.SOUTH)
+				{
+					if(pilot.GetDirectionForward())
+					{
+						pose.setLocation((Math.round(pose.getX())) + SENSOR_LINE_OFFSET, Math.round(pose.getY()));
+					}
+					else
+					{
+						pose.setLocation((Math.round(pose.getX())) - SENSOR_LINE_OFFSET, Math.round(pose.getY()));
+					}
+				}
+				else //if(getDirection(pose.getHeading()) == Direction.EAST)
+				{
+					if(pilot.GetDirectionForward())
+					{
+						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) + SENSOR_LINE_OFFSET);
+					}
+					else
+					{
+						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) - SENSOR_LINE_OFFSET);
+					}
+				}
+			}
+
 		}
+		}
+	
+	private Direction getDirection(float heading)
+	{
+		if(heading > 315 || heading < 45) //N
+		{return Direction.NORTH; }
+		else if(heading > 45 || heading < 135) //W
+		{return Direction.WEST; }
+		else if(heading > 135 || heading < 225) //S
+		{return Direction.SOUTH; }
+		else //if(heading > 225 || heading > 315) //E
+		{return Direction.EAST; }
 	}
 	
 	@Override

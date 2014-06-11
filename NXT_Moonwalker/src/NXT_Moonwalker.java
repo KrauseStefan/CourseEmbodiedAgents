@@ -33,14 +33,16 @@ public class NXT_Moonwalker{
 			navigator.rotatePanel();
 			break;
 		case BROKEN:
-			clawController.setState(ClawController.ClawPositions.LOAD);
-			Pose p = navigator.getPoseProvider().getPose();
+			
 			if(navigator.getMoveController().GetDirectionForward())
 			{
-				navigator.goTo(p.getX() + 10, p.getY());
+				clawController.setState(ClawController.ClawPositions.LOAD);
+				Pose p = navigator.getPoseProvider().getPose();
+				navigator.goTo(p.getX() + 8, p.getY());
 			}
 			else{
-				navigator.goTo(p.getX() - 15, p.getY());
+				clawController.setState(ClawController.ClawPositions.LOAD);
+				navigator.getMoveController().travel(-10);
 			}
 				navigator.waitForStop();
 				clawController.setState(ClawController.ClawPositions.CARRY);	
@@ -90,9 +92,11 @@ public class NXT_Moonwalker{
 		navigator.getPoseProvider().setStartToStart();
 		navigator.gridGoTo(0, 1, 0); // first intersection (no Panel)
 				
+		navigator.getPoseProvider().setAutoCalibrate(true);
 		navigator.gridGoTo(0, 2, 0);
 		
 		navigator.waitForStop();
+		navigator.getPoseProvider().setAutoCalibrate(false);
 		
 		navigator.getPoseProvider().calibrateHeading();
 		
