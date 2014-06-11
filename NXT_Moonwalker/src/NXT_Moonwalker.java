@@ -14,13 +14,14 @@ public class NXT_Moonwalker{
 	ClawController clawController = null;
 	LineFollower lineFol = null;
 	BlackWhiteSensor leftSensor = null;
-	
-	public NXT_Moonwalker(TrackNavigator n, SolarPanelDetector spd, ClawController clawController, LineFollower _lineFol, BlackWhiteSensor leftSensor){
+	BlackWhiteSensor rightSensor = null;
+	public NXT_Moonwalker(TrackNavigator n, SolarPanelDetector spd, ClawController clawController, LineFollower _lineFol, BlackWhiteSensor leftSensor, BlackWhiteSensor rightSensor){
 		this.navigator = n;
 		this.solarPanelDetector = spd;		
 		this.clawController = clawController;
 		this.lineFol = _lineFol;
 		this.leftSensor = leftSensor;
+		this.rightSensor = rightSensor;		
 	}
 	
 	private void inspectPanel() throws InterruptedException{
@@ -71,6 +72,12 @@ public class NXT_Moonwalker{
 	public void run() throws Exception{
 		LCD.drawString("Start" + 0, 0, 7);
 
+		iStopCondition stopAtLine = new iStopCondition() {
+			public boolean stopLoop() {				
+				return leftSensor.isBlack() || rightSensor.isBlack();
+			}
+		};
+		
 		while(Button.ENTER.isUp()){
 			Thread.yield();
 		}
@@ -80,11 +87,7 @@ public class NXT_Moonwalker{
 		
 		LCD.clear(7);
 		LCD.drawString("Follow Line", 0, 7);
-		lineFol.start(new iStopCondition() {
-			public boolean stopLoop() {				
-				return leftSensor.isBlack();
-			}
-		});
+		lineFol.start(stopAtLine);
 		
 		navigator.getMoveController().stop();
 		
@@ -93,20 +96,25 @@ public class NXT_Moonwalker{
 
 		Thread.sleep(1000);
 
-		Pose pose = new Pose(-GridPoseProvider.SENSOR_LINE_OFFSET, -lineFollowEndOffset, (float) -2.7);
-//		Pose pose = new Pose(-GridPoseProvider.SENSOR_LINE_OFFSET, -GridPoseProvider.LINE_SEPERATION_Y, 10);
+		Pose pose = new Pose(-GridPoseProvider.SENSOR_LINE_OFFSET, 0f, 0f);
+//		Pose pose = new Pose(, -lineFollowEndOffset, (float) -2.7);
 		navigator.getPoseProvider().setPose(pose);
-		
-		Thread.sleep(1000);
-		
-		navigator.goTo(0, 0, 0);
-		
-//		navigator.gridGoTo(0, 0, 0); // first intersection (no Panel)
+		Thread.sleep(10);		
+		navigator.goTo(0, 0, 0);		
 		navigator.waitForStop();
+		navigator.getPoseProvider().setGridPosition(0, 1, 0);
 		
-//		navigator.getPoseProvider().setAutoCalibrate(false);
-//		navigator.gridGoTo(0, 2, 0);
+		navigator.rotateTo(95);
+		lineFol.start(stopAtLine);
+		navigator.getMoveController().stop();
+		
 //		
+//		
+//		navigator.gridGoTo(0, 2, 0);
+//		navigator.gridGoTo(1, 2, 0);
+//		navigator.gridGoTo(2, 2, 0);
+//		navigator.gridGoTo(3, 2, 0);
+		
 //		navigator.waitForStop();
 //		
 ////		navigator.getPoseProvider().calibrateHeading();

@@ -39,7 +39,7 @@ public class App {
 				
 		dp.setAcceleration((int) (dp.getMaxTravelSpeed()));
 		TrackNavigator navigator = new TrackNavigator(dp, lineMapPoseProvider);
-		NXT_Moonwalker program = new NXT_Moonwalker(navigator, solarPanelDetector, clawController, lineFol, bwsLeft);		
+		NXT_Moonwalker program = new NXT_Moonwalker(navigator, solarPanelDetector, clawController, lineFol, bwsLeft, bwsRight);		
 		
 		
 		Button.ESCAPE.addButtonListener(new ButtonListener() {

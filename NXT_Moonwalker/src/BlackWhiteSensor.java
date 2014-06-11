@@ -51,7 +51,7 @@ public class BlackWhiteSensor {
 		// the two readings over the two types of surfaces
 		blackWhiteThreshold = (blackLightValue + whiteLightValue) / 2;
 	}
-
+	
 	/**
 	 * Automatically calibrate Black and White Sensor
 	 * 
@@ -68,6 +68,11 @@ public class BlackWhiteSensor {
 		blackWhiteThreshold = (blackLightValue + whiteLightValue) / 2;
 	}
 
+	
+	public void setBlackWhiteThreshold(int threshold){
+		blackWhiteThreshold = threshold;
+	}
+	
 	public int getBlackWhiteThreshold(){
 		return blackWhiteThreshold;
 	}
