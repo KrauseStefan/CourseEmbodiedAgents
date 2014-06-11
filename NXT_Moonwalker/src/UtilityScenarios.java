@@ -5,7 +5,7 @@ import lejos.robotics.navigation.Pose;
 
 public class UtilityScenarios {
 
-	static double mesureLineDistance(TrackNavigator navigator) {
+	static double mesureLineDistance(TrackNavigator navigator) throws Exception {
 
 		double speed = navigator.getMoveController().getTravelSpeed();
 		// navigator.getMoveController().setTravelSpeed(3);
@@ -136,7 +136,7 @@ public class UtilityScenarios {
 		}		
 	}
 
-	public static void calibrateHeadingTest(TrackNavigator navigator) throws IOException {
+	public static void calibrateHeadingTest(TrackNavigator navigator) throws Exception{
 		navigator.getMoveController().forward();				
 		LCD.clear(7);
 		LCD.drawString("wait for Line", 0, 5);
@@ -150,7 +150,7 @@ public class UtilityScenarios {
 		navigator.waitForStop();
 		
 		LCD.drawString("Calibrateing", 0, 5);
-		navigator.getPoseProvider().calibrateHeading();
+//		navigator.getPoseProvider().calibrateHeading();
 		navigator.stop();
 		LCD.drawString("Done Calibrating", 0, 5);
 	}

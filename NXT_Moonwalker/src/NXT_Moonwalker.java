@@ -78,8 +78,9 @@ public class NXT_Moonwalker{
 
 		LCD.clear();
 		lineFol.calibrate();
-		lineFollowerThread.start();
 
+		lineFollowerThread.start();
+		
 //		navigator.getMoveController().forward();				
 		LCD.clear(7);
 		LCD.drawString("Follow Line", 0, 7);
