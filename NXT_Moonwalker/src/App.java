@@ -8,11 +8,11 @@ public class App {
 //	final static double TRACK_WIDTH = 18.00; // TODO: use correct values
 	final static double TRACK_WIDTH = 18.90; // TODO: use correct values
 	
-	final static int LEFT_BLACK = 420;
-	final static int LEFT_WHITE = 596;
+	final static int LEFT_BLACK = 458; //420;
+	final static int LEFT_WHITE = 643; //596;
 	
-	final static int RIGHT_BLACK = 404;
-	final static int RIGHT_WHITE = 615;
+	final static int RIGHT_BLACK = 417; //404;
+	final static int RIGHT_WHITE = 643; //615;
 	
 	final static int CENTER_BLACK = 404;
 	final static int CENTER_WHITE = 615;
@@ -22,7 +22,9 @@ public class App {
 
 
 		BlackWhiteSensor bwsLeft = new BlackWhiteSensor(new LightSensor(SensorPort.S1), LEFT_BLACK, LEFT_WHITE);
+//		bwsLeft.calibrate();
 		BlackWhiteSensor bwsRight = new BlackWhiteSensor(new LightSensor(SensorPort.S2), RIGHT_BLACK, RIGHT_WHITE);
+//		bwsRight.calibrate();
 		BlackWhiteSensor btwCenter = new BlackWhiteSensor(new LightSensor(SensorPort.S3), CENTER_BLACK, CENTER_WHITE);
 		ColorSensor colorSensor = new ColorSensor(SensorPort.S4);
 		 

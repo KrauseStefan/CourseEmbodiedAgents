@@ -15,7 +15,7 @@ public class ClawController {
 
 		motor = m;
 
-		//CalibrateClaw();
+		CalibrateClaw();
 	}
 	
 	public void CalibrateClaw() throws InterruptedException
@@ -38,14 +38,10 @@ public class ClawController {
 			}
 		};
 		Thread t = new Thread(runnable);
+		t.setPriority(Thread.MIN_PRIORITY);
 		t.start();
 		
 
-	}
-
-	public void TurnClaw(int deg, int speed) {
-		motor.setSpeed(speed);
-		motor.rotate(deg, true);
 	}
 
 	public void TurnClawTo(int deg, int speed) {
