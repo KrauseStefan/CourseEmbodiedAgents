@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 import lejos.nxt.LCD;
 import lejos.robotics.navigation.Pose;
 
@@ -11,7 +9,7 @@ public class UtilityScenarios {
 		// navigator.getMoveController().setTravelSpeed(3);
 
 		navigator.getMoveController().forward();
-		navigator.getPoseProvider().waitForLine();
+//		navigator.getPoseProvider().waitForLine();
 		navigator.getMoveController().stop(); // stop at firstLine
 		Pose p1 = null;
 		try {
@@ -26,7 +24,7 @@ public class UtilityScenarios {
 			e.printStackTrace();
 		}
 
-		navigator.getPoseProvider().waitForLine();
+//		navigator.getPoseProvider().waitForLine();
 		navigator.getMoveController().stop(); // stop at secondLine
 
 		Pose p2 = navigator.getPoseProvider().getPose();
@@ -136,11 +134,22 @@ public class UtilityScenarios {
 		}		
 	}
 
+	static void testBWLightSensors(BlackWhiteSensor sensor1, BlackWhiteSensor sensor2) throws InterruptedException
+	{
+		while(true){
+			LCD.clear();
+			LCD.drawInt(sensor1.light(), 0, 0);
+			LCD.drawInt(sensor2.light(), 0, 1);
+			Thread.sleep(50);
+		}		
+	}
+	
+
 	public static void calibrateHeadingTest(TrackNavigator navigator) throws Exception{
 		navigator.getMoveController().forward();				
 		LCD.clear(7);
 		LCD.drawString("wait for Line", 0, 5);
-		navigator.getPoseProvider().waitForLine();
+//		navigator.getPoseProvider().waitForLine();
 		navigator.getMoveController().stop();
 		
 		LCD.clear(7);
@@ -150,7 +159,7 @@ public class UtilityScenarios {
 		navigator.waitForStop();
 		
 		LCD.drawString("Calibrateing", 0, 5);
-//		navigator.getPoseProvider().calibrateHeading();
+		//navigator.getPoseProvider().calibrateHeading();
 		navigator.stop();
 		LCD.drawString("Done Calibrating", 0, 5);
 	}

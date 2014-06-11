@@ -11,21 +11,16 @@ public class NXT_Moonwalker{
 	TrackNavigator navigator = null;
 	ClawController clawController = null;
 	LineFollower lineFol = null;
-	Thread lineFollowerThread;
+	BlackWhiteSensor leftSensor = null;
 	
-	
-	public NXT_Moonwalker(TrackNavigator n, SolarPanelDetector spd, ClawController clawController, LineFollower _lineFol){
+	public NXT_Moonwalker(TrackNavigator n, SolarPanelDetector spd, ClawController clawController, LineFollower _lineFol, BlackWhiteSensor leftSensor){
 		this.navigator = n;
 		this.solarPanelDetector = spd;		
 		this.clawController = clawController;
 		this.lineFol = _lineFol;
-		this.lineFollowerThread = new Thread(this.lineFol);
+		this.leftSensor = leftSensor;
 	}
 	
-	public void waitForLine(){
-		
-	}
-		
 	private void inspectPanel() throws InterruptedException{
 		SolarPanelDetector.SolarPanelStates state =  solarPanelDetector.getState();
 		switch (state) {
@@ -45,9 +40,7 @@ public class NXT_Moonwalker{
 				navigator.getMoveController().travel(-10);
 			}
 				navigator.waitForStop();
-				clawController.setState(ClawController.ClawPositions.CARRY);	
-
-		
+				clawController.setState(ClawController.ClawPositions.CARRY);			
 			break;
 		case CORRECT:
 			break;
@@ -79,14 +72,17 @@ public class NXT_Moonwalker{
 		LCD.clear();
 		lineFol.calibrate();
 
-		lineFollowerThread.start();
-		
-//		navigator.getMoveController().forward();				
 		LCD.clear(7);
 		LCD.drawString("Follow Line", 0, 7);
-		navigator.getPoseProvider().waitForLine();
+		lineFol.start(new iStopCondition() {
+			public boolean stopLoop() {				
+				return leftSensor.isBlack();
+			}
+		});
+		
+//		navigator.getMoveController().forward();				
+//		navigator.getPoseProvider().waitForLine();
 //		navigator.getMoveController().stop();
-		lineFol.stop();
 		
 		LCD.clear(7);
 		LCD.drawString("navigator", 0, 7);
@@ -94,11 +90,10 @@ public class NXT_Moonwalker{
 		navigator.gridGoTo(0, 1, 0); // first intersection (no Panel)
 		
 		navigator.waitForStop();
-		navigator.getPoseProvider().setAutoCalibrate(true);
+		navigator.getPoseProvider().setAutoCalibrate(false);
 		navigator.gridGoTo(0, 2, 0);
 		
 		navigator.waitForStop();
-		//navigator.getPoseProvider().setAutoCalibrate(false);
 		
 //		navigator.getPoseProvider().calibrateHeading();
 		

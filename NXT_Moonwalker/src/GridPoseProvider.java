@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 import lejos.nxt.LCD;
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.Move;
@@ -8,7 +6,6 @@ import lejos.robotics.navigation.MoveListener;
 import lejos.robotics.navigation.MoveProvider;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
-import lejos.util.PIDController;
 
 public class GridPoseProvider extends OdometryPoseProvider implements Runnable, MoveListener {
 	
@@ -17,7 +14,7 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 	public static final double LINE_SEPERATION_X = (59.5079 + 59.5318) /4;
 	public static final double LINE_SEPERATION_Y = (58.3235 + 58.2657) /4;
 
-	private Thread self = null;
+//	private Thread self = null;
 	private BlackWhiteSensor bwsLeft = null;
 	private BlackWhiteSensor bwsRight = null;
 	
@@ -40,8 +37,6 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		this.pilot = pilot;
 		bwsLeft = lightSensorLeft;
 		bwsRight = lightSensorRight;
-		self = new Thread(this);
-		self.start();
 	}
 
 	@Override
@@ -84,14 +79,6 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		//return new Pose(x / LINE_SEPERATION_X, y / LINE_SEPERATION_Y, pose.getHeading());
 		
 	}
-
-	public void waitForLine() throws InterruptedException {
-		while (true) {
-			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack())) // use a cached value
-				break;
-			Thread.sleep(20);
-		}
-	}
 	
 	public void setAutoCalibrate(boolean AC)
 	{
@@ -121,11 +108,11 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 			Pose pose1 = getPose();
 			LCD.drawString(getDirection(pose1.getHeading()).toString(), 0, 4);
 			
-			if(isTurning || true){
+			if(isTurning){
 				pilot.setTravelSpeed(normalTravelSpeed);								
 				continue;
 			}
-			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack()) && allowAutoCalibration) // use a cached value
+			if ((bwsLeft.wasBlack() || bwsRight.wasBlack()) && allowAutoCalibration) // use a cached value
 			{
 				Pose pose = getPose();
 				LCD.clear();
