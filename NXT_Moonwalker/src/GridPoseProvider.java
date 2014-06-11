@@ -22,6 +22,7 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 	private Pose startLocation = new Pose(); // (0 , 1)
 	
 	private boolean isTurning = false;
+	private boolean allowAutoCalibration = false;
 	
 	public enum Direction {
 		NORTH, //0 
@@ -77,6 +78,11 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 				break;
 			Thread.yield();
 		}
+	}
+	
+	public void setAutoCalibrate(boolean AC)
+	{
+		allowAutoCalibration = AC;
 	}
 	
 	public void calibrateHeading(){
@@ -169,7 +175,7 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 				pilot.setTravelSpeed(normalTravelSpeed);								
 				continue;
 			}
-			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack()) && false) // use a cached value
+			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack()) && allowAutoCalibration) // use a cached value
 			{
 				Pose pose = getPose();
 				if(getDirection(pose.getHeading()) == Direction.NORTH)
@@ -187,11 +193,11 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 				{
 					if(pilot.GetDirectionForward())
 					{
-						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) + SENSOR_LINE_OFFSET);
+						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) - SENSOR_LINE_OFFSET);
 					}
 					else
 					{
-						pose.setLocation(Math.round(pose.getX()), Math.round(pose.getY()) - SENSOR_LINE_OFFSET);
+						pose.setLocation(Math.round(pose.getX()), Math.round(pose.getY()) + SENSOR_LINE_OFFSET);
 					}
 				}
 				else if(getDirection(pose.getHeading()) == Direction.SOUTH)
@@ -209,11 +215,11 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 				{
 					if(pilot.GetDirectionForward())
 					{
-						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) - SENSOR_LINE_OFFSET);
+						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) + SENSOR_LINE_OFFSET);
 					}
 					else
 					{
-						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) + SENSOR_LINE_OFFSET);
+						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) - SENSOR_LINE_OFFSET);
 					}
 				}
 			}
