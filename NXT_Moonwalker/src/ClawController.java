@@ -14,6 +14,7 @@ public class ClawController {
 	public ClawController(NXTRegulatedMotor m) throws InterruptedException {
 
 		motor = m;
+
 		//CalibrateClaw();
 	}
 	
@@ -49,7 +50,7 @@ public class ClawController {
 
 	public void TurnClawTo(int deg, int speed) {
 		motor.setSpeed(speed);
-		motor.rotateTo(deg+offset);
+		motor.rotateTo(deg+offset, true);
 	}
 
 	public void setState(ClawPositions newstate) {

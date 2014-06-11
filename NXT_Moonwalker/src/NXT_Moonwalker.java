@@ -99,7 +99,7 @@ public class NXT_Moonwalker{
 		navigator.waitForStop();
 		//navigator.getPoseProvider().setAutoCalibrate(false);
 		
-		navigator.getPoseProvider().calibrateHeading();
+//		navigator.getPoseProvider().calibrateHeading();
 		
 		navigator.gridGoTo(1, 2, 0);
 		
