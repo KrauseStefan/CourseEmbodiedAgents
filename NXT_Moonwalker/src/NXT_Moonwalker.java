@@ -1,11 +1,13 @@
 
 
+import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.robotics.navigation.*;
 
 public class NXT_Moonwalker{
 	final int START_X = 0, START_Y = 0;
 	final float START_HEADIN = 0;
+	final float lineFollowEndOffset = (float) 0.7;
 	
 	SolarPanelDetector solarPanelDetector = null;
 	TrackNavigator navigator = null;
@@ -69,9 +71,13 @@ public class NXT_Moonwalker{
 	public void run() throws Exception{
 		LCD.drawString("Start" + 0, 0, 7);
 
+		while(Button.ENTER.isUp()){
+			Thread.yield();
+		}
+		
 		LCD.clear();
 		lineFol.calibrate();
-
+		
 		LCD.clear(7);
 		LCD.drawString("Follow Line", 0, 7);
 		lineFol.start(new iStopCondition() {
@@ -80,39 +86,47 @@ public class NXT_Moonwalker{
 			}
 		});
 		
-//		navigator.getMoveController().forward();				
-//		navigator.getPoseProvider().waitForLine();
-//		navigator.getMoveController().stop();
+		navigator.getMoveController().stop();
 		
 		LCD.clear(7);
 		LCD.drawString("navigator", 0, 7);
-		navigator.getPoseProvider().setStartToStart();
-		navigator.gridGoTo(0, 1, 0); // first intersection (no Panel)
-		
-		navigator.waitForStop();
-		navigator.getPoseProvider().setAutoCalibrate(false);
-		navigator.gridGoTo(0, 2, 0);
-		
-		navigator.waitForStop();
-		
-//		navigator.getPoseProvider().calibrateHeading();
-		
-		navigator.gridGoTo(1, 2, 0);
-		
-		navigator.waitForStop();
-		inspectPanel();
-		navigator.gridGoTo(2, 2, 0);
 
-		navigator.waitForStop();
-		inspectPanel();
-		navigator.gridGoTo(3, 2, 0);
-		
-		navigator.waitForStop();
-		inspectPanel();
+		Thread.sleep(1000);
 
-		while(true){
-			
-		}
+		Pose pose = new Pose(-GridPoseProvider.SENSOR_LINE_OFFSET, -lineFollowEndOffset, (float) -2.7);
+//		Pose pose = new Pose(-GridPoseProvider.SENSOR_LINE_OFFSET, -GridPoseProvider.LINE_SEPERATION_Y, 10);
+		navigator.getPoseProvider().setPose(pose);
+		
+		Thread.sleep(1000);
+		
+		navigator.goTo(0, 0, 0);
+		
+//		navigator.gridGoTo(0, 0, 0); // first intersection (no Panel)
+		navigator.waitForStop();
+		
+//		navigator.getPoseProvider().setAutoCalibrate(false);
+//		navigator.gridGoTo(0, 2, 0);
+//		
+//		navigator.waitForStop();
+//		
+////		navigator.getPoseProvider().calibrateHeading();
+//		
+//		navigator.gridGoTo(1, 2, 0);
+//		
+//		navigator.waitForStop();
+//		inspectPanel();
+//		navigator.gridGoTo(2, 2, 0);
+//
+//		navigator.waitForStop();
+//		inspectPanel();
+//		navigator.gridGoTo(3, 2, 0);
+//		
+//		navigator.waitForStop();
+//		inspectPanel();
+//
+//		while(true){
+//			
+//		}
 	}
 
 }

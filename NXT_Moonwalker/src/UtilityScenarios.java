@@ -154,7 +154,7 @@ public class UtilityScenarios {
 		
 		LCD.clear(7);
 		LCD.drawString("navigator", 0, 5);
-		navigator.getPoseProvider().setStartToStart();
+//		navigator.getPoseProvider().setStartToStart();
 		navigator.gridGoTo(0, 1, 0); // first intersection (no Panel)
 		navigator.waitForStop();
 		

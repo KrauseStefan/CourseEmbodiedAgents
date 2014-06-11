@@ -1,17 +1,7 @@
-import lejos.nxt.*;
+import lejos.nxt.LightSensor;
+import lejos.nxt.Button;
+import lejos.nxt.LCD;
 
-/**
- * A sensor that is able to distinguish a black/dark surface from a white/bright
- * surface.
- * 
- * Light percent values from an active light sensor and a threshold value
- * calculated based on a reading over a black/dark surface and a reading over a
- * light/bright surface is used to make the distinction between the two types of
- * surfaces.
- * 
- * @author Ole Caprani
- * @version 20.02.13
- */
 
 public class BlackWhiteSensor {
 
@@ -43,7 +33,7 @@ public class BlackWhiteSensor {
 		LCD.drawString("Press ENTER", 0, 0);
 		LCD.drawString("to callibrate", 0, 1);
 		LCD.drawString(color, 0, 2);
-		while (!Button.ENTER.isPressed()) {
+		while (!Button.ENTER.isUp()) {
 			lightValue = light();
 			LCD.drawInt(lightValue, 4, 10, 2);
 			LCD.refresh();
@@ -51,6 +41,9 @@ public class BlackWhiteSensor {
 		return lightValue;
 	}
 
+	/**
+	 * Manually calibrate Black and White Sensor
+	 */
 	public void calibrate() {
 		whiteLightValue = read("white");
 		blackLightValue = read("black");
@@ -59,9 +52,17 @@ public class BlackWhiteSensor {
 		blackWhiteThreshold = (blackLightValue + whiteLightValue) / 2;
 	}
 
+	/**
+	 * Automatically calibrate Black and White Sensor
+	 * 
+	 * @param blackLightValue ignored if -1, previous value is used instead
+	 * @param whiteLightValue ignored if -1
+	 */
 	public void calibrate(int blackLightValue, int whiteLightValue) {
-		this.blackLightValue = blackLightValue;
-		this.whiteLightValue = whiteLightValue;
+		if(blackLightValue != -1)
+			this.blackLightValue = blackLightValue;
+		if(whiteLightValue != -1)
+			this.whiteLightValue = whiteLightValue;
 		// The threshold is calculated as the median between
 		// the two readings over the two types of surfaces
 		blackWhiteThreshold = (blackLightValue + whiteLightValue) / 2;

@@ -21,11 +21,11 @@ public class TrackNavigator extends Navigator implements NavigationListener{
 	}
 	
 	public void gridGoTo(int x, int y, float heading){
-		this.goTo(this.getPoseProvider().gridGoTo(x, y, heading));
+		this.goTo(this.getPoseProvider().gridToWaypoint(x, y, heading));
 	}
 
 	public void gridGoTo(int x, int y){
-		this.goTo(this.getPoseProvider().gridGoTo(x, y, getPoseProvider().getPose().getHeading()));		
+		this.goTo(this.getPoseProvider().gridToWaypoint(x, y, getPoseProvider().getPose().getHeading()));		
 	}
 
 	public void rotatePanel(){

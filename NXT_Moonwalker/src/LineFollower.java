@@ -11,7 +11,14 @@ public class LineFollower {
 	}
 
 	public void calibrate() {
-		sensor.calibrate();
+		
+		int white = sensor.light();
+		
+		pilot.rotate(30);
+		
+		int black = sensor.light();
+		pilot.rotate(-30);
+		sensor.calibrate(black, white);
 	}
 
 	public void start(iStopCondition stopCond) {
@@ -20,6 +27,8 @@ public class LineFollower {
 		float error, derivative, previous_error = 0, integral = 0, dt = 300;
 		int sensorVal, powerDiff;
 
+		
+		
 		// LCD.clear();
 		LCD.drawString("Light: ", 0, 2);
 

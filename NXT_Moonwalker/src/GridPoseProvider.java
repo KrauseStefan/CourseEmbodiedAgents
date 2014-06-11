@@ -9,16 +9,16 @@ import lejos.robotics.navigation.Waypoint;
 
 public class GridPoseProvider extends OdometryPoseProvider implements Runnable, MoveListener {
 	
-	public final float SENSOR_LINE_OFFSET = (float) 8.5;
+	public static final float SENSOR_LINE_OFFSET = (float) 7;//8.5;
 	
-	public static final double LINE_SEPERATION_X = (59.5079 + 59.5318) /4;
-	public static final double LINE_SEPERATION_Y = (58.3235 + 58.2657) /4;
+	public static final float LINE_SEPERATION_X = (float) ((59.5079 + 59.5318) /4);
+	public static final float LINE_SEPERATION_Y = (float) ((58.3235 + 58.2657) /4);
 
 //	private Thread self = null;
 	private BlackWhiteSensor bwsLeft = null;
 	private BlackWhiteSensor bwsRight = null;
 	
-	private Pose startLocation = new Pose(); // (0 , 1)
+//	private Pose startLocation = new Pose(); // (0 , 1)
 	
 	private boolean isTurning = false;
 	private boolean allowAutoCalibration = false;
@@ -49,22 +49,22 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		super.setPose(aPose);
 	}
 
-	public void setStartToStart() {
-		startLocation = new Pose((getPose().getX() + SENSOR_LINE_OFFSET), getPose().getY(), 0);
-	}
+//	public void setStartToStart() {
+//		startLocation = new Pose((getPose().getX() + SENSOR_LINE_OFFSET), getPose().getY(), 0);
+//	}
+//
+//	public Pose getStartToStart() {
+//		return startLocation;
+//	}
 
-	public Pose getStartToStart() {
-		return startLocation;
-	}
-
-	public Waypoint gridGoTo(int x, int y, float heading) {
+	public Waypoint gridToWaypoint(int x, int y, float heading) {
 		// start = ( 0, 1 )
 		y -= 1;
 		x *= LINE_SEPERATION_X;
 		y *= LINE_SEPERATION_Y;
 				
-		x += startLocation.getX();
-		y += startLocation.getY();
+//		x += startLocation.getX();
+//		y += startLocation.getY();
 
 		return new Waypoint(x, y, heading);
 	}
