@@ -93,11 +93,10 @@ public class NXT_Moonwalker{
 		navigator.gridGoTo(0, 1, 0); // first intersection (no Panel)
 		
 		navigator.waitForStop();
-		navigator.getPoseProvider().setAutoCalibrate(true);
+		navigator.getPoseProvider().setAutoCalibrate(false);
 		navigator.gridGoTo(0, 2, 0);
 		
 		navigator.waitForStop();
-		//navigator.getPoseProvider().setAutoCalibrate(false);
 		
 //		navigator.getPoseProvider().calibrateHeading();
 		

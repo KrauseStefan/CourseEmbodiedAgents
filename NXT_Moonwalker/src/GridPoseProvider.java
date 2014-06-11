@@ -201,11 +201,11 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 			Pose pose1 = getPose();
 			LCD.drawString(getDirection(pose1.getHeading()).toString(), 0, 4);
 			
-			if(isTurning || true){
+			if(isTurning){
 				pilot.setTravelSpeed(normalTravelSpeed);								
 				continue;
 			}
-			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack()) && allowAutoCalibration) // use a cached value
+			if ((bwsLeft.wasBlack() || bwsRight.wasBlack()) && allowAutoCalibration) // use a cached value
 			{
 				Pose pose = getPose();
 				LCD.clear();
