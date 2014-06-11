@@ -85,11 +85,35 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		
 	}
 
-	public void waitForLine() {
+	public void waitForLine() throws InterruptedException {
+		Thread.sleep(2000);
 		while (true) {
 			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack())) // use a cached value
-				break;
-			Thread.yield();
+			{
+				if(bwsLeft.isBlack()) 
+				{
+					LCD.clear();
+					LCD.drawString("Left", 0, 0);
+					LCD.drawInt(bwsLeft.getChachedLightValue(), 0, 1);
+
+
+					
+					break;
+				}
+				if(bwsRight.isBlack()) 
+				{
+					LCD.clear();
+					LCD.drawString("Right", 0, 0);
+					LCD.drawInt(bwsRight.getChachedLightValue(), 0, 1);
+
+
+					
+					break;
+				}
+
+			}
+			Thread.sleep(40);
+			//Thread.yield();
 		}
 	}
 	
