@@ -35,17 +35,17 @@ public class ClawController {
 			}
 		});
 
-		Button.ENTER.addButtonListener(new ButtonListener() {
-			@Override
-			public void buttonReleased(Button b) {
-			}
-
-			@Override
-			public void buttonPressed(Button b) {
-				setNextState();
-			}
-		});
-		CalibrateClaw();
+//		Button.ENTER.addButtonListener(new ButtonListener() {
+//			@Override
+//			public void buttonReleased(Button b) {
+//			}
+//
+//			@Override
+//			public void buttonPressed(Button b) {
+//				setNextState();
+//			}
+//		});
+//		CalibrateClaw();
 	}
 	
 	public void CalibrateClaw() throws InterruptedException
