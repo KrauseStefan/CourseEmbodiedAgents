@@ -1,3 +1,4 @@
+import lejos.nxt.LCD;
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.Move;
 import lejos.robotics.navigation.Move.MoveType;
@@ -21,6 +22,13 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 	private Pose startLocation = new Pose(); // (0 , 1)
 	
 	private boolean isTurning = false;
+	
+	public enum Direction {
+		NORTH, //0 
+		WEST, //1
+		SOUTH, //2
+		EAST //3
+	};
 	
 	ReversibleDifferentialPilot pilot;
 
@@ -65,7 +73,7 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 
 	public void waitForLine() {
 		while (true) {
-			if (bwsLeft.wasBlack()) // use a cached value
+			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack())) // use a cached value
 				break;
 			Thread.yield();
 		}
@@ -140,10 +148,10 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		Boolean adjustLeft = false;
 		double normalTravelSpeed = pilot.getTravelSpeed();
 		pilot.addMoveListener(this);
-//		LCD.clear(6);
-//		LCD.clear(7);
-//		LCD.drawString("L: ", 0, 6);
-//		LCD.drawString("R: ", 0, 7);		
+		LCD.clear(6);
+		LCD.clear(7);
+		LCD.drawString("L: ", 0, 6);
+		LCD.drawString("R: ", 0, 7);	
 		
 		while (true) {
 			bwsLeft.light();
@@ -154,15 +162,76 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			LCD.drawInt(bwsLeft.light(), 3, 3, 6);
-//			LCD.drawInt(bwsRight.light(), 3, 3, 7);
+			LCD.drawInt(bwsLeft.light(), 3, 3, 6);
+			LCD.drawInt(bwsRight.light(), 3, 3, 7);
 			
 			if(isTurning){
 				pilot.setTravelSpeed(normalTravelSpeed);								
 				continue;
 			}
+			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack()) && false) // use a cached value
+			{
+				Pose pose = getPose();
+				if(getDirection(pose.getHeading()) == Direction.NORTH)
+				{
+					if(pilot.GetDirectionForward())
+					{
+						pose.setLocation((Math.round(pose.getX())) - SENSOR_LINE_OFFSET, Math.round(pose.getY()));
+					}
+					else
+					{
+						pose.setLocation((Math.round(pose.getX())) + SENSOR_LINE_OFFSET, Math.round(pose.getY()));
+					}
+				}
+				else if(getDirection(pose.getHeading()) == Direction.WEST)
+				{
+					if(pilot.GetDirectionForward())
+					{
+						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) + SENSOR_LINE_OFFSET);
+					}
+					else
+					{
+						pose.setLocation(Math.round(pose.getX()), Math.round(pose.getY()) - SENSOR_LINE_OFFSET);
+					}
+				}
+				else if(getDirection(pose.getHeading()) == Direction.SOUTH)
+				{
+					if(pilot.GetDirectionForward())
+					{
+						pose.setLocation((Math.round(pose.getX())) + SENSOR_LINE_OFFSET, Math.round(pose.getY()));
+					}
+					else
+					{
+						pose.setLocation((Math.round(pose.getX())) - SENSOR_LINE_OFFSET, Math.round(pose.getY()));
+					}
+				}
+				else //if(getDirection(pose.getHeading()) == Direction.EAST)
+				{
+					if(pilot.GetDirectionForward())
+					{
+						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) - SENSOR_LINE_OFFSET);
+					}
+					else
+					{
+						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) + SENSOR_LINE_OFFSET);
+					}
+				}
+			}
+			
 
 		}
+	}
+	
+	private Direction getDirection(float heading)
+	{
+		if(heading > 315 || heading < 45) //N
+		{return Direction.NORTH; }
+		else if(heading > 45 || heading < 135) //W
+		{return Direction.WEST; }
+		else if(heading > 135 || heading < 225) //S
+		{return Direction.SOUTH; }
+		else //if(heading > 225 || heading > 315) //E
+		{return Direction.EAST; }
 	}
 	
 	@Override
