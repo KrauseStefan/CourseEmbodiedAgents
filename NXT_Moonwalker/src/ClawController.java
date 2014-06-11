@@ -14,38 +14,7 @@ public class ClawController {
 	public ClawController(NXTRegulatedMotor m) throws InterruptedException {
 
 		motor = m;
-		Button.LEFT.addButtonListener(new ButtonListener() {
-			@Override
-			public void buttonReleased(Button b) {
-			}
-
-			@Override
-			public void buttonPressed(Button b) {
-				TurnClaw(-20, 70);
-			}
-		});
-		Button.RIGHT.addButtonListener(new ButtonListener() {
-			@Override
-			public void buttonReleased(Button b) {
-			}
-
-			@Override
-			public void buttonPressed(Button b) {
-				TurnClaw(20, 70);
-			}
-		});
-
-		Button.ENTER.addButtonListener(new ButtonListener() {
-			@Override
-			public void buttonReleased(Button b) {
-			}
-
-			@Override
-			public void buttonPressed(Button b) {
-				setNextState();
-			}
-		});
-		CalibrateClaw();
+		//CalibrateClaw();
 	}
 	
 	public void CalibrateClaw() throws InterruptedException

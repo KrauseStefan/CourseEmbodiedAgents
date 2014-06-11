@@ -73,6 +73,17 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 
 		return new Waypoint(x, y, heading);
 	}
+	
+	public Pose getGrid()
+	{
+		Pose pose = getPose();
+		float x = pose.getX();
+		float y = pose.getY();
+		Pose p = new Pose(Math.round((float)x / (float)LINE_SEPERATION_X), Math.round((float)y / (float)LINE_SEPERATION_Y), pose.getHeading());
+		return p;
+		//return new Pose(x / LINE_SEPERATION_X, y / LINE_SEPERATION_Y, pose.getHeading());
+		
+	}
 
 	public void waitForLine() {
 		while (true) {
@@ -180,6 +191,8 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 			}
 			LCD.drawInt(bwsLeft.light(), 3, 3, 6);
 			LCD.drawInt(bwsRight.light(), 3, 3, 7);
+			Pose pose1 = getPose();
+			LCD.drawString(getDirection(pose1.getHeading()).toString(), 0, 4);
 			
 			if(isTurning){
 				pilot.setTravelSpeed(normalTravelSpeed);								
@@ -188,50 +201,60 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack()) && allowAutoCalibration) // use a cached value
 			{
 				Pose pose = getPose();
+				LCD.clear();
+				LCD.drawString("Auto Calibrated", 0, 0);
+				LCD.drawInt(Math.round(pose.getX()),0, 1);
+				LCD.drawInt(Math.round(pose.getY()),0, 2);
 				if(getDirection(pose.getHeading()) == Direction.NORTH)
 				{
 					if(pilot.GetDirectionForward())
 					{
-						pose.setLocation((Math.round(pose.getX())) - SENSOR_LINE_OFFSET, Math.round(pose.getY()));
+						pose.setLocation((Math.round(getGrid().getX()))*(float)LINE_SEPERATION_X - SENSOR_LINE_OFFSET, Math.round(getGrid().getY())*(float)LINE_SEPERATION_Y );
 					}
 					else
 					{
-						pose.setLocation((Math.round(pose.getX())) + SENSOR_LINE_OFFSET, Math.round(pose.getY()));
+						pose.setLocation((Math.round(getGrid().getX()))*(float)LINE_SEPERATION_X + SENSOR_LINE_OFFSET, Math.round(getGrid().getY())*(float)LINE_SEPERATION_Y );
 					}
 				}
 				else if(getDirection(pose.getHeading()) == Direction.WEST)
 				{
 					if(pilot.GetDirectionForward())
 					{
-						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) - SENSOR_LINE_OFFSET);
+						pose.setLocation((Math.round(getGrid().getX()))*(float)LINE_SEPERATION_X , Math.round(getGrid().getY())*(float)LINE_SEPERATION_Y  - SENSOR_LINE_OFFSET);
 					}
 					else
 					{
-						pose.setLocation(Math.round(pose.getX()), Math.round(pose.getY()) + SENSOR_LINE_OFFSET);
+						pose.setLocation(Math.round(getGrid().getX())*(float)LINE_SEPERATION_X , Math.round(getGrid().getY())*(float)LINE_SEPERATION_Y  + SENSOR_LINE_OFFSET);
 					}
 				}
 				else if(getDirection(pose.getHeading()) == Direction.SOUTH)
 				{
 					if(pilot.GetDirectionForward())
 					{
-						pose.setLocation((Math.round(pose.getX())) + SENSOR_LINE_OFFSET, Math.round(pose.getY()));
+						pose.setLocation((Math.round(getGrid().getX()))*(float)LINE_SEPERATION_X  + SENSOR_LINE_OFFSET, Math.round(getGrid().getY())*(float)LINE_SEPERATION_Y );
 					}
 					else
 					{
-						pose.setLocation((Math.round(pose.getX())) - SENSOR_LINE_OFFSET, Math.round(pose.getY()));
+						pose.setLocation((Math.round(getGrid().getX()))*(float)LINE_SEPERATION_X  - SENSOR_LINE_OFFSET, Math.round(getGrid().getY())*(float)LINE_SEPERATION_Y );
 					}
 				}
 				else //if(getDirection(pose.getHeading()) == Direction.EAST)
 				{
 					if(pilot.GetDirectionForward())
 					{
-						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) + SENSOR_LINE_OFFSET);
+						pose.setLocation((Math.round(getGrid().getX()))*(float)LINE_SEPERATION_X , Math.round(getGrid().getY())*(float)LINE_SEPERATION_Y  + SENSOR_LINE_OFFSET);
 					}
 					else
 					{
-						pose.setLocation((Math.round(pose.getX())), Math.round(pose.getY()) - SENSOR_LINE_OFFSET);
+						pose.setLocation((Math.round(getGrid().getX()))*(float)LINE_SEPERATION_X , Math.round(getGrid().getY())*(float)LINE_SEPERATION_Y  - SENSOR_LINE_OFFSET);
 					}
 				}
+				allowAutoCalibration = false;
+				LCD.drawInt(Math.round(pose.getX()),10, 1);
+				LCD.drawInt(Math.round(pose.getY()),10, 2);
+
+				
+				
 			}
 
 		}
