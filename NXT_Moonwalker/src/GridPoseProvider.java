@@ -98,8 +98,8 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		PIDController pidCalibratorLeft  = new PIDController(bwsLeft .getBlackWhiteThreshold(), 0); // setPoint, sleepDelay
 		PIDController pidCalibratorRight = new PIDController(bwsRight.getBlackWhiteThreshold(), ms_delay); // setPoint, sleepDelay
 		
-		pidCalibratorLeft.setPIDParam(PIDController.PID_KP, (float) 0.4);
-		pidCalibratorRight.setPIDParam(PIDController.PID_KP, (float) 0.4);
+		pidCalibratorLeft.setPIDParam(PIDController.PID_KP, (float) 0.5);
+		pidCalibratorRight.setPIDParam(PIDController.PID_KP, (float) 0.5);
 		
 //		NXTConnection connection = Bluetooth.waitForConnection(0, NXTConnection.PACKET);
 		
@@ -124,6 +124,13 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		}
 		
 		goodValuesNeeded = 10;
+
+		pidCalibratorLeft.setPIDParam(PIDController.PID_KP, (float) 1);
+		pidCalibratorRight.setPIDParam(PIDController.PID_KP, (float) 1);
+
+		pidCalibratorLeft.setPIDParam(PIDController.PID_KI, (float) 0.2);
+		pidCalibratorRight.setPIDParam(PIDController.PID_KI, (float) 0.2);
+
 		
 		while(goodValuesNeeded > 0){
 			if(Math.abs(bwsLeft.light() - bwsRight.light()) < 10)
@@ -181,7 +188,7 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 			LCD.drawInt(bwsLeft.light(), 3, 3, 6);
 			LCD.drawInt(bwsRight.light(), 3, 3, 7);
 			
-			if(isTurning){
+			if(isTurning || true){
 				pilot.setTravelSpeed(normalTravelSpeed);								
 				continue;
 			}

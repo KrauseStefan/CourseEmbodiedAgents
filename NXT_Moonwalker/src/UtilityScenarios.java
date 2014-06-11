@@ -139,19 +139,19 @@ public class UtilityScenarios {
 	public static void calibrateHeadingTest(TrackNavigator navigator) throws IOException {
 		navigator.getMoveController().forward();				
 		LCD.clear(7);
-		LCD.drawString("wait for Line", 0, 7);
+		LCD.drawString("wait for Line", 0, 5);
 		navigator.getPoseProvider().waitForLine();
 		navigator.getMoveController().stop();
 		
 		LCD.clear(7);
-		LCD.drawString("navigator", 0, 7);
+		LCD.drawString("navigator", 0, 5);
 		navigator.getPoseProvider().setStartToStart();
 		navigator.gridGoTo(0, 1, 0); // first intersection (no Panel)
 		navigator.waitForStop();
 		
-		LCD.drawString("Calibrateing", 0, 7);
+		LCD.drawString("Calibrateing", 0, 5);
 		navigator.getPoseProvider().calibrateHeading();
 		navigator.stop();
-		LCD.drawString("Done Calibrating", 0, 7);
+		LCD.drawString("Done Calibrating", 0, 5);
 	}
 }
