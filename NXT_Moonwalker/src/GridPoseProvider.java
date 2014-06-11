@@ -1,3 +1,7 @@
+import java.io.IOException;
+
+import lejos.nxt.comm.Bluetooth;
+import lejos.nxt.comm.NXTConnection;
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.Move;
 import lejos.robotics.navigation.Move.MoveType;
@@ -5,6 +9,9 @@ import lejos.robotics.navigation.MoveListener;
 import lejos.robotics.navigation.MoveProvider;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
+import lejos.util.Datalogger;
+import lejos.util.Logger;
+import lejos.util.NXTDataLogger;
 import lejos.util.PIDController;
 
 public class GridPoseProvider extends OdometryPoseProvider implements Runnable, MoveListener {
@@ -43,7 +50,7 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		super.setPose(aPose);
 	}
 
-	public void setStartToStart() {
+	public void setStartToStart() {		
 		startLocation = new Pose((getPose().getX() + SENSOR_LINE_OFFSET), getPose().getY(), 0);
 	}
 
@@ -71,21 +78,31 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		}
 	}
 	
-	public void calibrateHeading(){
+	public void calibrateHeading() throws IOException{
 		float startHeading = getPose().getHeading();
 		int ms_delay = 20; 
 		
 		double normalTravelSpeed = pilot.getTravelSpeed();
 		pilot.setTravelSpeed(1);
+
 		
-		PIDController pidControllerLeft  = new PIDController(bwsLeft .getBlackWhiteThreshold(), 0); // setPoint, sleepDelay
-		PIDController pidControllerRight = new PIDController(bwsRight.getBlackWhiteThreshold(), ms_delay); // setPoint, sleepDelay
+		PIDController pidCalibratorLeft  = new PIDController(bwsLeft .getBlackWhiteThreshold(), 0); // setPoint, sleepDelay
+		PIDController pidCalibratorRight = new PIDController(bwsRight.getBlackWhiteThreshold(), ms_delay); // setPoint, sleepDelay
+		
+		pidCalibratorLeft.setPIDParam(PIDController.PID_KP, (float) 0.4);
+		pidCalibratorRight.setPIDParam(PIDController.PID_KP, (float) 0.4);
+		
+//		NXTConnection connection = Bluetooth.waitForConnection(0, NXTConnection.PACKET);
+		
+//		NXTDataLogger logger = new NXTDataLogger();
+//		logger.startRealtimeLog(connection);
+//		pidCalibratorLeft.registerDataLogger(logger);
 		
 		int goodValuesNeeded = 3;
 		
 		while(goodValuesNeeded > 0){ //adjust left wheel
-			int pidVal = pidControllerLeft.doPID(bwsLeft.light());
-			float diff = pidControllerLeft.getPIDParam(PIDController.PID_PV) - pidControllerLeft.getPIDParam(PIDController.PID_SETPOINT);
+			int pidVal = pidCalibratorLeft.doPID(bwsLeft.light());
+			float diff = pidCalibratorLeft.getPIDParam(PIDController.PID_PV) - pidCalibratorLeft.getPIDParam(PIDController.PID_SETPOINT);
 			
 			if(Math.abs(diff) < 2)
 				goodValuesNeeded--;
@@ -103,8 +120,8 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 			if(Math.abs(bwsLeft.light() - bwsRight.light()) < 10)
 				goodValuesNeeded--;
 
-			int valueLeft  = pidControllerLeft .doPID(bwsLeft .light());
-			int valueRight = pidControllerRight.doPID(bwsRight.light());
+			int valueLeft  = pidCalibratorLeft .doPID(bwsLeft .light());
+			int valueRight = pidCalibratorRight.doPID(bwsRight.light());
 			
 //			If radius is positive, the robot arcs left, and the center of the turning circle is on the left side of the robot.
 //			If radius is negative, the robot arcs right, and the center of the turning circle is on the right side of the robot.
@@ -161,7 +178,6 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 				pilot.setTravelSpeed(normalTravelSpeed);								
 				continue;
 			}
-
 		}
 	}
 	

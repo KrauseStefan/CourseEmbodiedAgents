@@ -58,8 +58,9 @@ public class App {
 //		UtilityScenarios.testReverse(navigator);
 //		UtilityScenarios.driveLineBackAndForth(navigator);
 //		UtilityScenarios.testBWLightSensor(btwCenter);
+//		UtilityScenarios.calibrateHeadingTest(navigator);
 		program.run();
-		//while(true){}
+		while(true){}
 
 	}
 

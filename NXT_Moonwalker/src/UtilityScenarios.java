@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 import lejos.nxt.LCD;
 import lejos.robotics.navigation.Pose;
 
@@ -127,12 +129,29 @@ public class UtilityScenarios {
 	
 	static void testBWLightSensor(BlackWhiteSensor sensor) throws InterruptedException
 	{
-		while(true)
-		{
+		while(true){
 			LCD.clear();
 			LCD.drawInt(sensor.light(), 0, 0);
 			Thread.sleep(50);
-		}
+		}		
+	}
+
+	public static void calibrateHeadingTest(TrackNavigator navigator) throws IOException {
+		navigator.getMoveController().forward();				
+		LCD.clear(7);
+		LCD.drawString("wait for Line", 0, 7);
+		navigator.getPoseProvider().waitForLine();
+		navigator.getMoveController().stop();
 		
+		LCD.clear(7);
+		LCD.drawString("navigator", 0, 7);
+		navigator.getPoseProvider().setStartToStart();
+		navigator.gridGoTo(0, 1, 0); // first intersection (no Panel)
+		navigator.waitForStop();
+		
+		LCD.drawString("Calibrateing", 0, 7);
+		navigator.getPoseProvider().calibrateHeading();
+		navigator.stop();
+		LCD.drawString("Done Calibrating", 0, 7);
 	}
 }
