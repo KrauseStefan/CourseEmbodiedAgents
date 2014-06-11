@@ -8,11 +8,11 @@ public class App {
 //	final static double TRACK_WIDTH = 18.00; // TODO: use correct values
 	final static double TRACK_WIDTH = 18.90; // TODO: use correct values
 	
-	final static int LEFT_BLACK = 458; //420;
-	final static int LEFT_WHITE = 643; //596;
+	final static int LEFT_BLACK = 408;//458; //420;
+	final static int LEFT_WHITE = 586;//643; //596;
 	
-	final static int RIGHT_BLACK = 417; //404;
-	final static int RIGHT_WHITE = 643; //615;
+	final static int RIGHT_BLACK = 417; //417; //404;
+	final static int RIGHT_WHITE = 540; //592; //643; //615;
 	
 	final static int CENTER_BLACK = 404;
 	final static int CENTER_WHITE = 615;
@@ -63,8 +63,9 @@ public class App {
 		//UtilityScenarios.testBWLightSensor(btwCenter);
 //		UtilityScenarios.testBWLightSensor(btwCenter);
 //		UtilityScenarios.calibrateHeadingTest(navigator);
+//		UtilityScenarios.testBWLightSensors(bwsLeft, bwsRight);
 		program.run();
-		while(true){}
+		//while(true){}
 
 	}
 

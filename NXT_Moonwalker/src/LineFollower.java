@@ -8,7 +8,7 @@ public class LineFollower implements Runnable {
 
 	public LineFollower(BlackWhiteSensor _sensor, ReversibleDifferentialPilot _pilot) {
 		this.sensor = _sensor;
-		this.isStarted = false;
+		this.isStarted = true;
 		this.pilot = _pilot;
 	}
 
@@ -18,7 +18,7 @@ public class LineFollower implements Runnable {
 
 	@Override
 	public void run() {
-		this.isStarted = true;
+		//this.isStarted = true;
 		final int power = 300;
 		final float Kp = 1.8f, Ki = 0, Kd = 0;
 		float error, derivative, previous_error = 0, integral = 0, dt = 300;

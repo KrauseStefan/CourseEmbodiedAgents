@@ -86,10 +86,34 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 	}
 
 	public void waitForLine() throws InterruptedException {
+		Thread.sleep(2000);
 		while (true) {
 			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack())) // use a cached value
+			{
+				if(bwsLeft.isBlack()) 
+				{
+					LCD.clear();
+					LCD.drawString("Left", 0, 0);
+					LCD.drawInt(bwsLeft.getChachedLightValue(), 0, 1);
+
+
+					
+					break;
+				}
+				if(bwsRight.isBlack()) 
+				{
+					LCD.clear();
+					LCD.drawString("Right", 0, 0);
+					LCD.drawInt(bwsRight.getChachedLightValue(), 0, 1);
+
+
+					
 				break;
-			Thread.sleep(20);
+				}
+
+			}
+			Thread.sleep(40);
+			//Thread.yield();
 		}
 	}
 	
@@ -121,11 +145,11 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 			Pose pose1 = getPose();
 			LCD.drawString(getDirection(pose1.getHeading()).toString(), 0, 4);
 			
-			if(isTurning || true){
+			if(isTurning){
 				pilot.setTravelSpeed(normalTravelSpeed);								
 				continue;
 			}
-			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack()) && allowAutoCalibration) // use a cached value
+			if ((bwsLeft.wasBlack() || bwsRight.wasBlack()) && allowAutoCalibration) // use a cached value
 			{
 				Pose pose = getPose();
 				LCD.clear();

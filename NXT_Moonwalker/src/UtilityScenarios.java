@@ -136,6 +136,17 @@ public class UtilityScenarios {
 		}		
 	}
 
+	static void testBWLightSensors(BlackWhiteSensor sensor1, BlackWhiteSensor sensor2) throws InterruptedException
+	{
+		while(true){
+			LCD.clear();
+			LCD.drawInt(sensor1.light(), 0, 0);
+			LCD.drawInt(sensor2.light(), 0, 1);
+			Thread.sleep(50);
+		}		
+	}
+	
+
 	public static void calibrateHeadingTest(TrackNavigator navigator) throws Exception{
 		navigator.getMoveController().forward();				
 		LCD.clear(7);
@@ -150,7 +161,7 @@ public class UtilityScenarios {
 		navigator.waitForStop();
 		
 		LCD.drawString("Calibrateing", 0, 5);
-//		navigator.getPoseProvider().calibrateHeading();
+		//navigator.getPoseProvider().calibrateHeading();
 		navigator.stop();
 		LCD.drawString("Done Calibrating", 0, 5);
 	}

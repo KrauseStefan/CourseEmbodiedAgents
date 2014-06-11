@@ -79,7 +79,7 @@ public class BlackWhiteSensor {
 
 	public boolean wasWhite() {
 		synchronized (this) {
-			return (lastValue < getBlackWhiteThreshold());
+			return (lastValue > getBlackWhiteThreshold());
 		}
 	}
 
