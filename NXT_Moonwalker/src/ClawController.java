@@ -11,37 +11,52 @@ public class ClawController {
 		CARRY // 2
 	};
 
-	public ClawController(NXTRegulatedMotor m) {
-
+	public ClawController(NXTRegulatedMotor m) throws Exception {
 		motor = m;
-
-		// CalibrateClaw();
 	}
 
 	public void CalibrateClaw() throws InterruptedException {
-		motor.setSpeed(100);
-		motor.rotate(-270, true);
-		while (motor.isMoving()) {
-			Thread.yield();
-		}
-		motor.stop(true);
-		offset = motor.getPosition();
-		offset += 20;
-		TurnClawTo(0, 40);
+		Runnable runnable = new Runnable() {			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(1500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				motor.setStallThreshold(20, 10);
+				motor.setSpeed(70);
+				motor.rotate(-270, true);
+				while (motor.isMoving()) {
+					Thread.yield();
+				}
+				motor.stop(true);
+				offset = motor.getPosition();
+				offset += 20;
+				motor.setStallThreshold(50, 1000);
+				TurnClawTo(0, 40);				
+			}
+		};
+		Thread t = new Thread(runnable);
+		t.start();
 
 	}
 
-	public void TurnClawTo(int deg, int speed) {
+	public void TurnClawTo(int deg, int speed, boolean immediate) {
 		motor.setSpeed(speed);
-		motor.rotateTo(deg + offset, true);
+		motor.rotateTo(deg + offset, immediate);
+		
+	}
+	public void TurnClawTo(int deg, int speed) {
+		TurnClawTo(deg, speed, true);
 	}
 
 	public void setState(ClawPositions newstate) {
 		state = newstate;
 		if (newstate == ClawPositions.RELEASE) {
-			TurnClawTo(0, 100);
+			TurnClawTo(0, 100, false);
 		} else if (newstate == ClawPositions.LOAD) {
-			TurnClawTo(90, 80);
+			TurnClawTo(90, 80, false);
 		} else if (newstate == ClawPositions.CARRY) {
 			TurnClawTo(170, 50);
 		}

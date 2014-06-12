@@ -1,140 +1,174 @@
 
-
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.robotics.navigation.*;
+import lejos.util.PilotProps;
 
-public class NXT_Moonwalker{
+public class NXT_Moonwalker {
 	final int START_X = 0, START_Y = 0;
 	final float START_HEADIN = 0;
 	final float lineFollowEndOffset = (float) 0.7;
-	
+
 	SolarPanelDetector solarPanelDetector = null;
-	TrackNavigator navigator = null;
+	ReversibleDifferentialPilot pilot = null;
 	ClawController clawController = null;
 	LineFollower lineFol = null;
 	BlackWhiteSensor leftSensor = null;
 	BlackWhiteSensor rightSensor = null;
-	public NXT_Moonwalker(TrackNavigator n, SolarPanelDetector spd, ClawController clawController, LineFollower _lineFol, BlackWhiteSensor leftSensor, BlackWhiteSensor rightSensor){
-		this.navigator = n;
-		this.solarPanelDetector = spd;		
+
+	public NXT_Moonwalker(ReversibleDifferentialPilot p, SolarPanelDetector spd, ClawController clawController, LineFollower _lineFol,
+			BlackWhiteSensor leftSensor, BlackWhiteSensor rightSensor) {
+		this.pilot = p;
+		this.solarPanelDetector = spd;
 		this.clawController = clawController;
 		this.lineFol = _lineFol;
 		this.leftSensor = leftSensor;
-		this.rightSensor = rightSensor;		
+		this.rightSensor = rightSensor;
 	}
-	
-	private void inspectPanel() throws InterruptedException{
-		SolarPanelDetector.SolarPanelStates state =  solarPanelDetector.getState();
+
+	private void rotatePanel() {
+		pilot.rotate(180);
+		pilot.reverse();
+	}
+
+	private void inspectPanel() throws InterruptedException {
+		SolarPanelDetector.SolarPanelStates state = solarPanelDetector.getState();
 		switch (state) {
 		case REVERSED:
-			navigator.rotatePanel();
+			rotatePanel();
 			break;
 		case BROKEN:
-			
-			if(navigator.getMoveController().GetDirectionForward())
-			{
+			if (pilot.GetDirectionForward()) {
 				clawController.setState(ClawController.ClawPositions.LOAD);
-				Pose p = navigator.getPoseProvider().getPose();
-				navigator.goTo(p.getX() + 8, p.getY());
-			}
-			else{
+				pilot.travel(8);
+			} else {
 				clawController.setState(ClawController.ClawPositions.LOAD);
-				navigator.getMoveController().travel(-10);
+				pilot.travel(-10);
 			}
-				navigator.waitForStop();
-				clawController.setState(ClawController.ClawPositions.CARRY);			
+			clawController.setState(ClawController.ClawPositions.CARRY);
 			break;
 		case CORRECT:
 			break;
 		}
 
 	}
-		
-//	private void printPose(int nr){
-//		printPose(nr, new Pose());
-//	}
 	
+	private void printStatus(String status){
+		LCD.clear(7);
+		LCD.drawString(status, 0, 7);
 
-	void printPose(int nr, Pose pose){
-		Pose p = navigator.getPoseProvider().getPose();
-		LCD.clear(0);
-		LCD.clear(1);
-		LCD.clear(2);
-		LCD.clear(3);
-		LCD.drawString("#: " + nr, 0, 0);
-		LCD.drawString("x: " + ((p.getX() - pose.getX()) / GridPoseProvider.LINE_SEPERATION_X), 0, 1);
-		LCD.drawString("y: " + ((p.getY() - pose.getY() + 1) / GridPoseProvider.LINE_SEPERATION_Y), 0, 2);
-		LCD.drawString("h: " + (p.getHeading() - pose.getHeading()), 0, 3);
 	}
 
-	
-	public void run() throws Exception{
-		LCD.drawString("Start" + 0, 0, 7);
-
-		iStopCondition stopAtLine = new iStopCondition() {
-			public boolean stopLoop() {				
-				return leftSensor.isBlack() || rightSensor.isBlack();
-			}
-		};
+	// public void proceedToIntersection() throws Exception{	// Pose pose = new Pose(-GridPoseProvider.SENSOR_LINE_OFFSET, 0f, 4f);
+	// navigator.getPoseProvider().setPose(pose);
+	// Thread.sleep(10);
+	// navigator.goTo(0, 0, 0);
+	// navigator.waitForStop();
+	// }
+	public void linefollowFor(final long timeout) throws Exception {
 		
-		while(Button.ENTER.isUp()){
+		lineFol.start(new iStopCondition() {
+			long stopTime = System.currentTimeMillis() + timeout;//500;
+			@Override
+			public boolean stopLoop() {
+				return System.currentTimeMillis() > stopTime;
+			}
+		});
+		
+//		pilot.rotate(-4);
+//		pilot.travel(GridPoseProvider.SENSOR_LINE_OFFSET);
+	}
+
+	public void proceedToSolarPanel() throws Exception {
+		pilot.travel(GridPoseProvider.SENSOR_LINE_OFFSET);
+	}
+
+	public void run() throws Exception {
+		StopAtLine stopAtLine = new StopAtLine();
+
+		while (Button.ENTER.isUp()) {
 			Thread.yield();
 		}
-		
+
 		LCD.clear();
+		leftSensor.calibrate(leftSensor.light(), -1);
+		rightSensor.calibrate(rightSensor.light(), -1);
 		lineFol.calibrate();
+		clawController.CalibrateClaw();
 		
-		LCD.clear(7);
-		LCD.drawString("Follow Line", 0, 7);
+		printStatus("Follow Line");
+		stopAtLine.setDelayBeforeStop(5000);
 		lineFol.start(stopAtLine);
-		
-		navigator.getMoveController().stop();
-		
-		LCD.clear(7);
-		LCD.drawString("navigator", 0, 7);
+
+		printStatus("navigator");
+
+		Thread.sleep(100);
+
+		linefollowFor(500);
 
 		Thread.sleep(1000);
-
-		Pose pose = new Pose(-GridPoseProvider.SENSOR_LINE_OFFSET, 0f, 0f);
-//		Pose pose = new Pose(, -lineFollowEndOffset, (float) -2.7);
-		navigator.getPoseProvider().setPose(pose);
-		Thread.sleep(10);		
-		navigator.goTo(0, 0, 0);		
-		navigator.waitForStop();
-		navigator.getPoseProvider().setGridPosition(0, 1, 0);
-		
-		navigator.rotateTo(95);
+		pilot.rotate(95);
+		Thread.sleep(1000);
+		lineFol.calibrate();
 		lineFol.start(stopAtLine);
-		navigator.getMoveController().stop();
+		linefollowFor(400);
+
+		Thread.sleep(100);
+		pilot.rotate(-95);
+		Thread.sleep(100);
+		lineFol.calibrate();
+		Thread.sleep(1000);
+		linefollowFor(2000);
+		proceedToSolarPanel();
+
 		
-//		
-//		
-//		navigator.gridGoTo(0, 2, 0);
-//		navigator.gridGoTo(1, 2, 0);
-//		navigator.gridGoTo(2, 2, 0);
-//		navigator.gridGoTo(3, 2, 0);
+		inspectPanel();
 		
-//		navigator.waitForStop();
-//		
-////		navigator.getPoseProvider().calibrateHeading();
-//		
-//		navigator.gridGoTo(1, 2, 0);
-//		
-//		navigator.waitForStop();
-//		inspectPanel();
-//		navigator.gridGoTo(2, 2, 0);
-//
-//		navigator.waitForStop();
-//		inspectPanel();
-//		navigator.gridGoTo(3, 2, 0);
-//		
-//		navigator.waitForStop();
-//		inspectPanel();
-//
-//		while(true){
-//			
-//		}
+		lineFol.start(stopAtLine);
+
+		// navigator.gridGoTo(0, 2, 0);
+		// navigator.gridGoTo(1, 2, 0);
+		// navigator.gridGoTo(2, 2, 0);
+		// navigator.gridGoTo(3, 2, 0);
+
+		// navigator.waitForStop();
+		//
+		// // navigator.getPoseProvider().calibrateHeading();
+		//
+		// navigator.gridGoTo(1, 2, 0);
+		//
+		// navigator.waitForStop();
+		// inspectPanel();
+		// navigator.gridGoTo(2, 2, 0);
+		//
+		// navigator.waitForStop();
+		// inspectPanel();
+		// navigator.gridGoTo(3, 2, 0);
+		//
+		// navigator.waitForStop();
+		// inspectPanel();
+		//
+		// while(true){
+		//
+		// }
+	}
+
+	class StopAtLine implements iStopCondition {
+
+		private long minTime;
+
+		public void setDelayBeforeStop(long timeMs) {
+			minTime = timeMs + System.currentTimeMillis();
+		}
+
+		@Override
+		public boolean stopLoop() {
+			boolean stop = leftSensor.isBlack() || rightSensor.isBlack();
+			LCD.drawString("Left : " + leftSensor.getChachedLightValue() + " " + leftSensor.getBlackWhiteThreshold(), 0, 3);
+			LCD.drawString("Right: " + rightSensor.getChachedLightValue() + " " + rightSensor.getBlackWhiteThreshold(), 0, 4);
+			return stop && (System.currentTimeMillis() > minTime);
+		}
+
 	}
 
 }
