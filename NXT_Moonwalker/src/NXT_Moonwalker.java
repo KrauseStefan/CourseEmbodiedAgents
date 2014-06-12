@@ -73,14 +73,29 @@ public class NXT_Moonwalker {
 			public boolean stopLoop() {
 				return System.currentTimeMillis() > stopTime;
 			}
-		});
+		}, pilot.GetDirectionForward());
 		
 //		pilot.rotate(-4);
 //		pilot.travel(GridPoseProvider.SENSOR_LINE_OFFSET);
 	}
 
-	public void proceedToSolarPanel() throws Exception {
-		pilot.travel(GridPoseProvider.SENSOR_LINE_OFFSET);
+	public void proceedToSolarPanel(int dist) throws Exception {
+		//pilot.travel(GridPoseProvider.SENSOR_LINE_OFFSET);
+		if(pilot.GetDirectionForward()){ pilot.travel(16);}
+		else {pilot.travel(dist);}
+	}
+	
+	public void proceedToNextIntersection() throws Exception{
+		if(pilot.GetDirectionForward())
+		{
+			linefollowFor(500);
+			proceedToSolarPanel(16);
+		}
+		else{
+			linefollowFor(200);
+			proceedToSolarPanel(25);
+			linefollowFor(300);
+		}
 	}
 
 	public void run() throws Exception {
@@ -98,7 +113,7 @@ public class NXT_Moonwalker {
 		
 		printStatus("Follow Line");
 		stopAtLine.setDelayBeforeStop(5000);
-		lineFol.start(stopAtLine);
+		lineFol.start(stopAtLine, pilot.GetDirectionForward());
 
 		printStatus("navigator");
 
@@ -110,7 +125,7 @@ public class NXT_Moonwalker {
 		pilot.rotate(95);
 		Thread.sleep(1000);
 		lineFol.calibrate();
-		lineFol.start(stopAtLine);
+		lineFol.start(stopAtLine, pilot.GetDirectionForward());
 		linefollowFor(400);
 
 		Thread.sleep(100);
@@ -118,13 +133,19 @@ public class NXT_Moonwalker {
 		Thread.sleep(100);
 		lineFol.calibrate();
 		Thread.sleep(1000);
-		linefollowFor(2000);
-		proceedToSolarPanel();
-
-		
+		linefollowFor(800);
+		proceedToSolarPanel(16);
 		inspectPanel();
 		
-		lineFol.start(stopAtLine);
+		proceedToNextIntersection();
+		inspectPanel();
+		
+		proceedToNextIntersection();
+		inspectPanel();
+		
+		Thread.sleep(8000);
+		
+		//lineFol.start(stopAtLine);
 
 		// navigator.gridGoTo(0, 2, 0);
 		// navigator.gridGoTo(1, 2, 0);

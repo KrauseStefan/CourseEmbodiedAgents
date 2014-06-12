@@ -32,7 +32,7 @@ public class LineFollower {
 		// sensor.setBlackWhiteThreshold(sensor.getBlackWhiteThreshold() - 15);
 	}
 
-	public void start(iStopCondition stopCond) {
+	public void start(iStopCondition stopCond, boolean forward) {
 		final int power = 300;
 		int sensorVal, powerDiff, whiteDiff = 0;
 
@@ -51,7 +51,9 @@ public class LineFollower {
 			sensorVal = sensor.light() - whiteDiff / 2;
 
 			powerDiff = pidController.doPID(sensorVal);
-			pilot.forward(power + powerDiff, power - powerDiff);
+			if(forward){
+			pilot.forward(power + powerDiff, power - powerDiff);}
+			else{pilot.backward(power - powerDiff, power + powerDiff);}
 
 			LCD.drawInt(sensorVal, 4, 10, 1);
 			LCD.drawInt(powerDiff, 4, 10, 2);
