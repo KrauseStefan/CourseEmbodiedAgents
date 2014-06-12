@@ -15,48 +15,64 @@ public class ClawController {
 
 		motor = m;
 
-		CalibrateClaw();
+		//CalibrateClaw();
 	}
 	
-	public void CalibrateClaw() throws InterruptedException
-	{		
-		Runnable runnable =  new Runnable() {
-			
+	public void CalibrateClaw() throws InterruptedException {
+		Runnable runnable = new Runnable() {			
 			@Override
 			public void run() {
-				motor.setSpeed(100);
-				motor.rotate(-270, true);
-				while(motor.isMoving()){try {
-					Thread.sleep(20);
+				try {
+					Thread.sleep(1500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-				}}
+				}
+				motor.setStallThreshold(30, 20);
+				motor.setSpeed(70);
+				motor.rotate(-270, true);
+				//motor.backward();
+				while (motor.isMoving()) {
+					Thread.yield();
+				}
 				motor.stop(true);
 				offset = motor.getPosition();
-				offset += 20;
+				offset += 32;
+				motor.setStallThreshold(50, 1000);
+				//setState(ClawPositions.RELEASE);
 				TurnClawTo(0, 40);				
 			}
 		};
 		Thread t = new Thread(runnable);
-		t.setPriority(Thread.MIN_PRIORITY);
 		t.start();
-		
 
 	}
 
 	public void TurnClawTo(int deg, int speed) {
 		motor.setSpeed(speed);
 		motor.rotateTo(deg+offset, true);
+		motor.setStallThreshold(40, 50);
+		while (motor.isMoving()) {
+			Thread.yield();
+		}
+		motor.stop(true);
+		motor.setStallThreshold(50, 1000);
+		
+		
+	}
+	public void TurnClawTo(int deg, int speed, boolean immediate) {
+		motor.setSpeed(speed);
+		motor.rotateTo(deg + offset, immediate);
+
 	}
 
 	public void setState(ClawPositions newstate) {
 		state = newstate;
 		if (newstate == ClawPositions.RELEASE) {
-			TurnClawTo(0, 100);
+			TurnClawTo(0, 70, false); //100
 		} else if (newstate == ClawPositions.LOAD) {
-			TurnClawTo(90, 80);
+			TurnClawTo(90, 70, false); //200
 		} else if (newstate == ClawPositions.CARRY) {
-			TurnClawTo(170, 50);
+			TurnClawTo(170, 70); //50
 		}
 	}
 

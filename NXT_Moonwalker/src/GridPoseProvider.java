@@ -90,7 +90,7 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 		while (true) {
 			if (!isTurning && (bwsLeft.wasBlack() || bwsRight.wasBlack())) // use a cached value
 			{
-				if(bwsLeft.isBlack()) 
+				/*if(bwsLeft.isBlack()) 
 				{
 					LCD.clear();
 					LCD.drawString("Left", 0, 0);
@@ -109,7 +109,8 @@ public class GridPoseProvider extends OdometryPoseProvider implements Runnable, 
 
 					
 				break;
-				}
+				}*/
+				break;
 
 			}
 			Thread.sleep(40);

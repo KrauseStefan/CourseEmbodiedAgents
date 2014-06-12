@@ -1,5 +1,6 @@
 
 
+import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.robotics.navigation.*;
 
@@ -9,17 +10,22 @@ public class NXT_Moonwalker{
 	
 	SolarPanelDetector solarPanelDetector = null;
 	TrackNavigator navigator = null;
+	ReversibleDifferentialPilot pilot = null;
 	ClawController clawController = null;
 	LineFollower lineFol = null;
+	BlackWhiteSensor leftSensor = null;
+	BlackWhiteSensor rightSensor = null;
 	Thread lineFollowerThread;
-	
-	
-	public NXT_Moonwalker(TrackNavigator n, SolarPanelDetector spd, ClawController clawController, LineFollower _lineFol){
+
+	public NXT_Moonwalker(TrackNavigator n, ReversibleDifferentialPilot p, SolarPanelDetector spd, ClawController clawController, LineFollower _lineFol,
+			BlackWhiteSensor leftSensor, BlackWhiteSensor rightSensor) {
 		this.navigator = n;
-		this.solarPanelDetector = spd;		
+		this.pilot = p;
+		this.solarPanelDetector = spd;
 		this.clawController = clawController;
 		this.lineFol = _lineFol;
-		this.lineFollowerThread = new Thread(this.lineFol);
+		this.leftSensor = leftSensor;
+		this.rightSensor = rightSensor;
 	}
 	
 	public void waitForLine(){
@@ -41,8 +47,9 @@ public class NXT_Moonwalker{
 				navigator.goTo(p.getX() + 8, p.getY());
 			}
 			else{
+				navigator.getMoveController().travel(4);
 				clawController.setState(ClawController.ClawPositions.LOAD);
-				navigator.getMoveController().travel(-10);
+				navigator.getMoveController().travel(-14);
 			}
 				navigator.waitForStop();
 				clawController.setState(ClawController.ClawPositions.CARRY);	
@@ -71,29 +78,55 @@ public class NXT_Moonwalker{
 		LCD.drawString("y: " + ((p.getY() - pose.getY() + 1) / GridPoseProvider.LINE_SEPERATION_Y), 0, 2);
 		LCD.drawString("h: " + (p.getHeading() - pose.getHeading()), 0, 3);
 	}
+	
+	public void linefollowFor(final long timeout) throws Exception {
+
+		lineFol.start(new iStopCondition() {
+			long stopTime = System.currentTimeMillis() + timeout;//500;
+			@Override
+			public boolean stopLoop() {
+				return System.currentTimeMillis() > stopTime;
+			}
+		}, pilot.GetDirectionForward());
+
+//		pilot.rotate(-4);
+//		pilot.travel(GridPoseProvider.SENSOR_LINE_OFFSET);
+	}
 
 	
 	public void run() throws Exception{
+		StopAtLine stopAtLine = new StopAtLine();
+
 		LCD.drawString("Start" + 0, 0, 7);
 
 		LCD.clear();
-		lineFol.calibrate();
-
-		lineFollowerThread.start();
 		
-//		navigator.getMoveController().forward();				
+		while (Button.ENTER.isUp()) {
+			Thread.yield();
+		}
+		
+		leftSensor.calibrate(leftSensor.light(), -1);
+		rightSensor.calibrate(rightSensor.light(), -1);
+		lineFol.calibrate();
+		pilot.travel(5);
+		clawController.CalibrateClaw();
+
 		LCD.clear(7);
 		LCD.drawString("Follow Line", 0, 7);
+		//lineFol.start(stopAtLine, pilot.GetDirectionForward());
+		linefollowFor(5500);
+		pilot.forward();
 		navigator.getPoseProvider().waitForLine();
+
+		
+		//navigator.getPoseProvider().waitForLine();
 //		navigator.getMoveController().stop();
-		lineFol.stop();
+		//lineFol.stop();
 		
 		LCD.clear(7);
 		LCD.drawString("navigator", 0, 7);
 		navigator.getPoseProvider().setStartToStart();
 		navigator.gridGoTo(0, 1, 0); // first intersection (no Panel)
-		
-		navigator.waitForStop();
 		navigator.getPoseProvider().setAutoCalibrate(false);
 		navigator.gridGoTo(0, 2, 0);
 		
@@ -118,5 +151,24 @@ public class NXT_Moonwalker{
 			
 		}
 	}
+	
+	class StopAtLine implements iStopCondition {
+
+		private long minTime;
+
+		public void setDelayBeforeStop(long timeMs) {
+			minTime = timeMs + System.currentTimeMillis();
+		}
+
+		@Override
+		public boolean stopLoop() {
+			boolean stop = leftSensor.isBlack() || rightSensor.isBlack();
+			LCD.drawString("Left : " + leftSensor.getChachedLightValue() + " " + leftSensor.getBlackWhiteThreshold(), 0, 3);
+			LCD.drawString("Right: " + rightSensor.getChachedLightValue() + " " + rightSensor.getBlackWhiteThreshold(), 0, 4);
+			return stop && (System.currentTimeMillis() > minTime);
+		}
+
+	}
+
 
 }

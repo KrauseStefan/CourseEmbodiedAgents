@@ -60,11 +60,13 @@ public class BlackWhiteSensor {
 	}
 
 	public void calibrate(int blackLightValue, int whiteLightValue) {
-		this.blackLightValue = blackLightValue;
-		this.whiteLightValue = whiteLightValue;
+		if(blackLightValue > 200) //blackLightValue != -1 && 
+			this.blackLightValue = blackLightValue;
+		if(whiteLightValue != -1)
+			this.whiteLightValue = whiteLightValue;
 		// The threshold is calculated as the median between
 		// the two readings over the two types of surfaces
-		blackWhiteThreshold = (blackLightValue + whiteLightValue) / 2;
+		blackWhiteThreshold = (this.blackLightValue + this.whiteLightValue) / 2;
 	}
 
 	public int getBlackWhiteThreshold(){
@@ -92,8 +94,14 @@ public class BlackWhiteSensor {
 	}
 	
 	public int light() {
-		synchronized (this) {
+		synchronized (this) {			
 			lastValue = ls.readNormalizedValue();   //readValue();
+			if(lastValue > whiteLightValue){
+				calibrate(-1, lastValue);
+			}else if(lastValue < blackLightValue){
+				calibrate(lastValue, -1);
+			}
+
 			return lastValue;			
 		}		
 	}
