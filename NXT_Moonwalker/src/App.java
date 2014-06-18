@@ -28,9 +28,9 @@ public class App {
 		BlackWhiteSensor btwCenter = new BlackWhiteSensor(new LightSensor(SensorPort.S3), CENTER_BLACK, CENTER_WHITE);
 		ColorSensor colorSensor = new ColorSensor(SensorPort.S4);
 		 
-		SolarPanelDetector solarPanelDetector = new SolarPanelDetector(colorSensor);
-		
 		ReversibleDifferentialPilot dp = new ReversibleDifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, leftMotor, rightMotor);
+		SolarPanelDetector solarPanelDetector = new SolarPanelDetector(colorSensor, dp);
+		
 		dp.setTravelSpeed(8);
 		LineFollower lineFol = new LineFollower(btwCenter, dp);
 
